@@ -1,6 +1,6 @@
 import axios from "axios";
 import { deleteTokens, getTokensSync, saveTokens } from "../secureStore";
-import { useUserStore } from "../../ZustandStore/store";
+import { useUserStore } from "../../src/entities/ZustandStores/store";
 
 export const axiosApi = axios.create({
   baseURL: "https://rpgbackend-1.onrender.com",

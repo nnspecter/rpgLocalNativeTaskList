@@ -3,7 +3,7 @@ import { AuthData, AuthResponse, NewTask, Task, UpdateTask } from "../axios/apiT
 import { delTask, newTask, startLogin, startRegistration, updTask } from "../axios/api";
 import { invalidateAll } from "./onSuccess";
 import { loadToken, saveTokens } from "../secureStore";
-import { useUserStore } from "../../ZustandStore/store";
+import { useUserStore } from "../../src/entities/ZustandStores/store";
 
 export const useLogin = () => {
   const { setAuthenticated } = useUserStore();
