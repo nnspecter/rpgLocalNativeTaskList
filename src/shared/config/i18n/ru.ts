@@ -67,4 +67,13 @@ export default {
     xpToNext: "{{xp}} XP до уровня {{lvl}}",
   },
 
+  "timer": {
+    paused: "пауза",
+    remaining: "осталось",
+    resume: "Продолжить",
+    pause: "Пауза",
+    endEarly: "Завершить досрочно",
+    defaultSession: "Фокус-сессия"
+  }
+
 };

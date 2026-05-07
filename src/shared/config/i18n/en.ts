@@ -65,4 +65,12 @@ export default {
     xpLabel: "Experience",
     xpToNext: "{{xp}} XP to level {{lvl}}",
   },
+  timer: {
+    paused: "paused",
+    remaining: "remaining",
+    resume: "Resume",
+    pause: "Pause",
+    endEarly: "End early",
+    defaultSession: "Focus session",
+  },
 };

@@ -11,6 +11,7 @@ import { Task } from '@/entities/tasks';
 import { useTimerStore } from '@/entities/timer';
 import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme';
 import { formatMinutes } from '@/shared/config/TimeFormatters/formatMinutes';
+import { expValidation } from '@/shared/config/expValidation/expValidation';
 
 export default function OneTask({ data }: { data: Task }) {
   const { setSelectedTask, setIsTimer } = useTimerStore();
@@ -59,14 +60,22 @@ export default function OneTask({ data }: { data: Task }) {
               {data.description}
             </Text>
           ) : null}
-
-          {data.time ? (
-            <View style={styles.timeBadge}>
-              <Text style={styles.timeText}>
-                {formatMinutes(data.time)}
-              </Text>
-            </View>
-          ) : null}
+          <View style={{display: "flex", flexDirection: "row", gap: 10}}>
+            {data.time ? (
+              <View style={styles.timeBadge}>
+                <Text style={styles.timeText}>
+                  {expValidation(data.time)}xp
+                </Text>
+              </View>
+            ) : null}
+            {data.time ? (
+              <View style={styles.timeBadge}>
+                <Text style={styles.timeText}>
+                  {formatMinutes(data.time)}
+                </Text>
+              </View>
+            ) : null}
+          </View>
         </View>
 
         <Button

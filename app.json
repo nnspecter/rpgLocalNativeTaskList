@@ -31,7 +31,7 @@
         }
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.nnspecter.RPGTasks"
+      "package": "com.nnspecter.rpgtasks"
     },
     "web": {
       "favicon": "./assets/favicon.png"

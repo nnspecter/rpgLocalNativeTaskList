@@ -9,15 +9,19 @@ import { PaperProvider } from "react-native-paper";
 
 import { useEffect } from "react";
 import { useTasksStore } from "@/entities/tasks";
+import { useMetricsStore } from "@/entities/metrics";
 
 
 export default function App() {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const {resetDaily} = useTasksStore();
+  const {checkAndResetStreak} = useMetricsStore();
   useEffect(()=>{
+    checkAndResetStreak();
     resetDaily();
-  }, [])
+  }, []);
+  
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>

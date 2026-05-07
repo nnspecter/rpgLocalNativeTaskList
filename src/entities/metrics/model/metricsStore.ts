@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { toDateString } from  "@/shared/config/DateFormatters/DateFormatter";
+import { toDateString } from "@/shared/config/DateFormatters/DateFormatter";
 
 interface UserStore {
   streak: number;
@@ -10,9 +10,8 @@ interface UserStore {
 
   updateStreak: () => void;
   updateCompletedCount: () => void;
+  checkAndResetStreak: () => void;
 }
-
-
 
 export const useMetricsStore = create<UserStore>()(
   persist(
@@ -20,6 +19,29 @@ export const useMetricsStore = create<UserStore>()(
       streak: 0,
       streakDate: null,
       completedTasks: 0,
+
+      // Проверка и сброс стрика если он устарел
+      checkAndResetStreak: () => {
+        set((state) => {
+          if (!state.streakDate) return {};
+
+          const yesterday = toDateString(
+            new Date(Date.now() - 24 * 60 * 60 * 1000)
+          );
+          const today = toDateString(new Date());
+
+          // Сбрасываем если дата стрика старее вчерашнего дня
+          const isStreakExpired =
+            state.streakDate !== today && state.streakDate !== yesterday;
+
+          if (isStreakExpired) {
+            return { streak: 0, streakDate: null };
+          }
+
+          return {};
+        });
+      },
+
       // Обновление стрика
       updateStreak: () => {
         set((state) => {
@@ -44,6 +66,7 @@ export const useMetricsStore = create<UserStore>()(
           return { streak: 1, streakDate: today };
         });
       },
+
       // Обновление счетчика выполненных
       updateCompletedCount: () => {
         set((state) => ({
