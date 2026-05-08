@@ -1,12 +1,10 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { StyleSheet, View, useColorScheme } from "react-native";
-import { queryClient } from "../../api/QueryClient";
 import { lightTheme, darkTheme } from "./providers/ThemeProvider/lib/paperTheme";
 import Main from "../pages/Main/Main";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "./providers/ThemeProvider/ui/ThemeContext";
 import { PaperProvider } from "react-native-paper";
-
 import { useEffect } from "react";
 import { useTasksStore } from "@/entities/tasks";
 import { useMetricsStore } from "@/entities/metrics";
@@ -20,10 +18,9 @@ export default function App() {
   useEffect(()=>{
     checkAndResetStreak();
     resetDaily();
-  }, []);
+  }, [])
   
   return (
-    <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={{ flex: 1 }}>
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
           <ThemeProvider>
@@ -38,7 +35,6 @@ export default function App() {
           </ThemeProvider>
         </PaperProvider>
       </GestureHandlerRootView>
-    </QueryClientProvider>
   );
 }
 

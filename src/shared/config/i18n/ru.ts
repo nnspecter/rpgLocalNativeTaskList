@@ -67,7 +67,7 @@ export default {
     xpToNext: "{{xp}} XP до уровня {{lvl}}",
   },
 
-  "timer": {
+  timer: {
     paused: "пауза",
     remaining: "осталось",
     resume: "Продолжить",

@@ -71,6 +71,6 @@ export default {
     resume: "Resume",
     pause: "Pause",
     endEarly: "End early",
-    defaultSession: "Focus session",
-  },
+    defaultSession: "Focus session"
+  }
 };

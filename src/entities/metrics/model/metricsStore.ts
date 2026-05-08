@@ -7,10 +7,9 @@ interface UserStore {
   streak: number;
   streakDate: string | null;
   completedTasks: number;
-
+  checkAndResetStreak: () => void;
   updateStreak: () => void;
   updateCompletedCount: () => void;
-  checkAndResetStreak: () => void;
 }
 
 export const useMetricsStore = create<UserStore>()(
@@ -19,8 +18,7 @@ export const useMetricsStore = create<UserStore>()(
       streak: 0,
       streakDate: null,
       completedTasks: 0,
-
-      // Проверка и сброс стрика если он устарел
+      //проверка и ресет стрика по дате последнего обновления
       checkAndResetStreak: () => {
         set((state) => {
           if (!state.streakDate) return {};
@@ -41,8 +39,9 @@ export const useMetricsStore = create<UserStore>()(
           return {};
         });
       },
+      
+      // Обновление стрика (+1)
 
-      // Обновление стрика
       updateStreak: () => {
         set((state) => {
           const today = toDateString(new Date());
@@ -66,8 +65,7 @@ export const useMetricsStore = create<UserStore>()(
           return { streak: 1, streakDate: today };
         });
       },
-
-      // Обновление счетчика выполненных
+      // Обновление счетчика выполненных (+1)
       updateCompletedCount: () => {
         set((state) => ({
           completedTasks: state.completedTasks + 1,
