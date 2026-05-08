@@ -4,6 +4,7 @@ import { useMetricsStore } from '@/entities/metrics'
 import { useTasksStore } from '@/entities/tasks'
 import { useTimerStore } from '@/entities/timer'
 import { useSnacbarControlStore } from '@/shared/ui/Snackbar/model/snackbarControlStore'
+import i18n from '@/shared/config/i18n'
 import React, { useState, useEffect, useRef } from 'react'
 import { View, StyleSheet, Dimensions, StatusBar } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
@@ -53,10 +54,18 @@ export const Timer = () => {
   }, [isPaused])
 
   const fill = Math.round(((totalSeconds - secondsLeft) / totalSeconds) * 100)
-  const displayMinutes = Math.floor(secondsLeft / 60)
+
+  const displayHours = Math.floor(secondsLeft / 3600)
+  const displayMinutes = Math.floor((secondsLeft % 3600) / 60)
   const displaySeconds = secondsLeft % 60
-  const timeString = `${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
-  const timeUnit = isPaused ? 'пауза' : 'осталось'
+
+  const timeString = displayHours > 0
+    ? `${String(displayHours)}:${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
+    : `${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
+
+  const timeUnit = isPaused
+    ? i18n.t('timer.paused')
+    : i18n.t('timer.remaining')
 
   const handlePause = () => {
     if (isPaused) {
@@ -67,7 +76,7 @@ export const Timer = () => {
     }
   }
 
-  const styles = makeStyles(theme);
+  const styles = makeStyles(theme, displayHours > 0);
 
   return (
     <View style={styles.container}>
@@ -77,7 +86,7 @@ export const Timer = () => {
       />
 
       <Text style={styles.taskName} numberOfLines={2}>
-        {selectedTask?.taskName ?? 'Фокус-сессия'}
+        {selectedTask?.taskName ?? i18n.t('timer.defaultSession')}
       </Text>
 
       <View style={styles.circleWrapper}>
@@ -111,7 +120,7 @@ export const Timer = () => {
           onPress={handlePause}
         />
         <Text style={styles.pauseLabel}>
-          {isPaused ? 'Продолжить' : 'Пауза'}
+          {isPaused ? i18n.t('timer.resume') : i18n.t('timer.pause')}
         </Text>
       </Surface>
 
@@ -124,13 +133,13 @@ export const Timer = () => {
         textColor={theme.colors.error}
         rippleColor={theme.colors.errorBackground}
       >
-        Завершить досрочно
+        {i18n.t('timer.endEarly')}
       </Button>
     </View>
   )
 }
 
-const makeStyles = (theme: AppTheme) => StyleSheet.create({
+const makeStyles = (theme: AppTheme, hasHours: boolean) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
@@ -157,9 +166,9 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   },
   timeText: {
     color: theme.colors.onBackground,
-    fontSize: 56,
+    fontSize: hasHours ? 42 : 56,
     fontWeight: '300',
-    letterSpacing: 4,
+    letterSpacing: hasHours ? 2 : 4,
     fontVariant: ['tabular-nums'],
   },
   labelText: {
