@@ -15,11 +15,12 @@ export default function App() {
   const isDark = colorScheme === "dark";
   const {resetDaily} = useTasksStore();
   const {checkAndResetStreak} = useMetricsStore();
+  
   useEffect(()=>{
     checkAndResetStreak();
     resetDaily();
   }, [])
-  
+
   return (
       <GestureHandlerRootView style={{ flex: 1 }}>
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
