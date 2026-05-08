@@ -1,3 +1,3 @@
 export const expValidation = (time: number): number => {
-    return Math.round(time*2)
+    return Math.round(time*3)
 }

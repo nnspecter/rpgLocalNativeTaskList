@@ -31,8 +31,8 @@ export default function OneTask({ data }: { data: Task }) {
         })),
       ]}
     >
-      <DeleteTaskDialog task={data} />
       <ChangeTaskDialog task={data} />
+      <DeleteTaskDialog task={data} />
     </Reanimated.View>
   );
 
@@ -167,7 +167,7 @@ const makeStyles = (theme: AppTheme) =>
     rightActions: {
       flexDirection: 'row',
       alignItems: 'center',
-      gap: 8,
-      paddingHorizontal: 10,
+      gap: 0,
+      paddingHorizontal: 10
     },
   });

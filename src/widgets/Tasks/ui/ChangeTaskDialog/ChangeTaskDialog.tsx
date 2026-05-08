@@ -39,6 +39,8 @@ export default function ChangeTaskDialog({ task }: { task: Task }) {
         mode="contained"
         onPress={() => setVisible(true)}
         icon="pencil"
+        iconColor={theme.colors.onPrimary}
+        containerColor={theme.colors.primary}
         style={styles.createBtn}
       />
 

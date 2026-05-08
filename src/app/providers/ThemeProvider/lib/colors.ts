@@ -10,6 +10,7 @@ export const lightTheme = {
   errorBackground: '#FFEDEC',
   errorText: '#BA1A1A',
   buttonDisabled: '#9E9E9E',
+  errorDeleteBtn: '#BA1A1A',
 };
 
 export const darkTheme = {
@@ -23,6 +24,7 @@ export const darkTheme = {
   errorBackground: '#3B1A1A',
   errorText: '#FF8A80',
   buttonDisabled: '#555555',
+  errorDeleteBtn: '#BA1A1A',
 };
 
 export type Theme = typeof lightTheme;

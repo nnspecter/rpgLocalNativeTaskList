@@ -23,7 +23,8 @@ export default function DeleteTaskDialog({ task }: { task: Task }) {
         mode="contained"
         onPress={() => setVisible(true)}
         icon="delete"
-        iconColor={theme.colors.error}
+        containerColor={theme.colors.errorText}
+        iconColor={theme.colors.onPrimary}
         style={styles.deleteBtn}
       />
       <Portal>
@@ -43,7 +44,7 @@ export default function DeleteTaskDialog({ task }: { task: Task }) {
             <Button
               mode="contained"
               onPress={handleDelete}
-              buttonColor={theme.colors.error}
+              buttonColor={theme.colors.errorDeleteBtn}
               style={styles.actionBtn}
             >
               {i18n.t('taskDialog.deleteTask.submit')}

@@ -20,8 +20,9 @@ export const lightTheme = {
     inputBackground: '#FAFAFA',
     avatarBackground: '#EEF0FF',
     errorBackground: '#FFEDEC',
-    errorText: '#BA1A1A',
+    errorText: '#de4c4c',
     buttonDisabled: '#9E9E9E',
+    errorDeleteBtn: '#f46565',
   },
 };
 
@@ -43,8 +44,9 @@ export const darkTheme = {
     inputBackground: '#2A2A3A',
     avatarBackground: '#2D2B55',
     errorBackground: '#3B1A1A',
-    errorText: '#FF8A80',
+    errorText: '#de4c4c',
     buttonDisabled: '#555555',
+    errorDeleteBtn: '#f46565',
   },
 };
 
