@@ -111,6 +111,7 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     borderWidth: 1,
     borderColor: theme.colors.border,
     alignItems: 'center',
+    textAlign: 'center'
   },
   sortButtonActive: {
     backgroundColor: theme.colors.primary,
