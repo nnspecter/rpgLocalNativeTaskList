@@ -70,7 +70,7 @@ export default {
     remaining: "remaining",
     resume: "Resume",
     pause: "Pause",
-    endEarly: "End early",
+    endEarly: "Cancel the task",
     defaultSession: "Focus session"
   }
 };

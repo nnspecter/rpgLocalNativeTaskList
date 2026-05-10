@@ -8,34 +8,46 @@ import { PaperProvider } from "react-native-paper";
 import { useEffect } from "react";
 import { useTasksStore } from "@/entities/tasks";
 import { useMetricsStore } from "@/entities/metrics";
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import * as NavigationBar from 'expo-navigation-bar';
 
 
 export default function App() {
+  
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const {resetDaily} = useTasksStore();
   const {checkAndResetStreak} = useMetricsStore();
+  const bgColor = isDark ? "#121212" : "#F4F4F8";
   
   useEffect(()=>{
     checkAndResetStreak();
     resetDaily();
   }, [])
 
+  useEffect(() => {
+    NavigationBar.setBackgroundColorAsync('transparent');
+    NavigationBar.setPositionAsync('absolute');
+  }, []);
+
   return (
-      <GestureHandlerRootView style={{ flex: 1 }}>
+    <GestureHandlerRootView style={{ flex: 1, backgroundColor: bgColor }}>
+      <SafeAreaProvider>
+        <StatusBar
+          translucent
+          backgroundColor="transparent"
+          style={isDark ? "light" : "dark"}
+        />
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
           <ThemeProvider>
-            <View
-              style={[
-                styles.container,
-                { backgroundColor: isDark ? "#121212" : "#F4F4F8" },
-              ]}
-            >
+            <View style={[styles.container, { backgroundColor: bgColor }]}>
               <Main /> 
             </View>
           </ThemeProvider>
         </PaperProvider>
-      </GestureHandlerRootView>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
 

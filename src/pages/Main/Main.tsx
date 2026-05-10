@@ -6,21 +6,30 @@ import { Tasks } from '@/widgets/Tasks';
 import { Timer } from '@/widgets/Timer';
 import React from 'react'
 import { View } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function Main(){
   const {isTimer, setIsTimer} = useTimerStore();
+  const insets = useSafeAreaInsets();
+
   return (
-    <View >
+    <View style={{ flex: 1 }}>
       {!isTimer ?
-      <View style={{paddingBottom: 30, gap: 10, paddingTop: 30, alignContent: "center", alignSelf: "center"}}>
-        <Character/>
-        <Tasks/>
-        <Metrics/>
-        <AfterCompleteSnackbar/>
-      </View>
-    :
-    <Timer/>}
-    
+        <View style={{
+          gap: 10,
+          paddingTop: insets.top + 5,      // отступ от шторки + зазор
+          paddingBottom: insets.bottom + 5, // отступ от кнопок навигации + зазор
+          alignContent: "center",
+          alignSelf: "center",
+        }}>
+          <Character/>
+          <Tasks/>
+          <Metrics/>
+          <AfterCompleteSnackbar/>
+        </View>
+      :
+        <Timer/>
+      }
     </View>
   )
 }

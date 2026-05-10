@@ -72,7 +72,7 @@ export default {
     remaining: "осталось",
     resume: "Продолжить",
     pause: "Пауза",
-    endEarly: "Завершить досрочно",
+    endEarly: "Отменить выполнение",
     defaultSession: "Фокус-сессия"
   }
 
