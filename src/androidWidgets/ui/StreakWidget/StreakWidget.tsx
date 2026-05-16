@@ -34,7 +34,7 @@ export function StreakWidget({
       style={{
         height: 'match_parent',
         width: 'match_parent',
-        margin: 6,
+        margin: 3,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -66,13 +66,13 @@ export function StreakWidget({
               ? require('../../../../assets/widgets/fire.png')
               : require('../../../../assets/widgets/fire-grey.png')
           }
-          imageWidth={34}
-          imageHeight={34}
-          style={{ marginLeft: 8 }}
+          imageWidth={24}
+          imageHeight={24}
+          style={{ marginLeft: 4 }}
         />
       </FlexWidget>
 
-      <FlexWidget style={{ width: 5 }} />
+      <FlexWidget style={{ width: 3 }} />
 
       {/* Уровень */}
       <FlexWidget
@@ -84,11 +84,12 @@ export function StreakWidget({
         }}
       >
         <TextWidget
-          text={`${level}`}
+          text={` ${level}`}
           style={{
             fontSize: 32,
             fontFamily: 'Inter',
             color: theme.text,
+            
           }}
         />
         <TextWidget
