@@ -1,26 +1,11 @@
 import React from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, Linking } from 'react-native';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
-import { HelloWidget } from './HelloWidget';
-import { StreakWidget } from './StreakWidget';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { HelloWidget } from './ui/HelloWidget/HelloWidget';
+import { StreakWidget } from './ui/StreakWidget/StreakWidget';
+import { getMetrics } from './lib/getMetrics';
+import { getLevel } from './lib/getLevel';
 
-async function getMetrics(): Promise<{ streak: number; todayUpdate: boolean }> {
-  try {
-    const raw = await AsyncStorage.getItem('metricsStore-storage2');
-    if (!raw) return { streak: 0, todayUpdate: false };
-
-    const parsed = JSON.parse(raw);
-    const state = parsed?.state;
-
-    return {
-      streak: state?.streak ?? 0,
-      todayUpdate: state?.todayUpdate ?? false,
-    };
-  } catch {
-    return { streak: 0, todayUpdate: false };
-  }
-}
 
 const nameToWidget = {
   Hello: HelloWidget,
@@ -36,13 +21,27 @@ export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
     case 'WIDGET_ADDED':
     case 'WIDGET_UPDATE': {
       const { streak, todayUpdate } = await getMetrics();
-      props.renderWidget(<Widget isDark={isDark} streak={streak} todayUpdate={todayUpdate} />);
+      const { level } = await getLevel();
+      props.renderWidget(
+        <Widget 
+          isDark={isDark}
+          streak={streak}
+          todayUpdate={todayUpdate}
+          level={level}
+        />);
       break;
     }
 
     case 'WIDGET_RESIZED':
+      break;
     case 'WIDGET_DELETED':
-    case 'WIDGET_CLICK':
+      break;
+    case 'WIDGET_CLICK': {
+      if(props.clickAction === "OPEN_APP") {
+        Linking.openURL("rpgtasks://index")
+      }
+      break;
+    }
     default:
       break;
   }

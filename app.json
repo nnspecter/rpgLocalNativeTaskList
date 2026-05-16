@@ -5,6 +5,7 @@
     "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "scheme": "rpgtasks",
     "userInterfaceStyle": "automatic",
     
     "ios": {
@@ -58,13 +59,13 @@
             },
             {
               "name": "Streak",
-              "label": "Streak wiget",
+              "label": "Streak widget",
               "minWidth": "320dp",
               "minHeight": "120dp",
               "targetCellWidth": 2,
               "targetCellHeight": 2,
               "description": "Streak and level wiget",
-              "previewImage": "./assets/fire.svg",
+              "previewImage": "./assets/widgets/fire.png",
               "updatePeriodMillis": 1800000
             }
           ]
