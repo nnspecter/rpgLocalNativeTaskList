@@ -11,6 +11,7 @@ import { useMetricsStore } from "@/entities/metrics";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as NavigationBar from 'expo-navigation-bar';
+import { HelloWidgetPreviewScreen } from "@/androidWidgets/HelloWidgetPreviewScreen";
 
 
 export default function App() {
@@ -42,7 +43,7 @@ export default function App() {
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
           <ThemeProvider>
             <View style={[styles.container, { backgroundColor: bgColor }]}>
-              <Main /> 
+              <Main/>
             </View>
           </ThemeProvider>
         </PaperProvider>

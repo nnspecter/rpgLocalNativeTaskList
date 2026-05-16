@@ -7,6 +7,7 @@ interface UserStore {
   streak: number;
   streakDate: string | null;
   completedTasks: number;
+  todayUpdate: boolean;
   checkAndResetStreak: () => void;
   updateStreak: () => void;
   updateCompletedCount: () => void;
@@ -18,6 +19,7 @@ export const useMetricsStore = create<UserStore>()(
       streak: 0,
       streakDate: null,
       completedTasks: 0,
+      todayUpdate: false,
       //проверка и ресет стрика по дате последнего обновления
       checkAndResetStreak: () => {
         set((state) => {
@@ -33,7 +35,7 @@ export const useMetricsStore = create<UserStore>()(
             state.streakDate !== today && state.streakDate !== yesterday;
 
           if (isStreakExpired) {
-            return { streak: 0, streakDate: null };
+            return { streak: 0, streakDate: null, todayUpdate: false };
           }
 
           return {};
@@ -41,13 +43,12 @@ export const useMetricsStore = create<UserStore>()(
       },
       
       // Обновление стрика (+1)
-
       updateStreak: () => {
         set((state) => {
           const today = toDateString(new Date());
 
           if (!state.streakDate) {
-            return { streak: 1, streakDate: today };
+            return { streak: 1, streakDate: today, todayUpdate: true };
           }
 
           if (state.streakDate === today) {
@@ -59,10 +60,10 @@ export const useMetricsStore = create<UserStore>()(
           );
 
           if (state.streakDate === yesterday) {
-            return { streak: state.streak + 1, streakDate: today };
+            return { streak: state.streak + 1, streakDate: today, todayUpdate: true };
           }
 
-          return { streak: 1, streakDate: today };
+          return { streak: 1, streakDate: today, todayUpdate: true };
         });
       },
       // Обновление счетчика выполненных (+1)

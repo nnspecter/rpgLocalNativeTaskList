@@ -10,8 +10,7 @@ import { View, StyleSheet, Dimensions, StatusBar } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { Button, IconButton, Surface, Text, useTheme } from 'react-native-paper'
 import { expValidation } from '@/shared/config/expValidation/expValidation'
-
-
+import { refreshStreakWidget } from '@/androidWidgets/refreshStreakWidget'
 
 const { width } = Dimensions.get('window')
 
@@ -20,7 +19,7 @@ export const Timer = () => {
   const { setVisible } = useSnacbarControlStore();
   const {editTask} = useTasksStore();
   const {setExperience} = useCharacterStore();
-  const {updateCompletedCount, updateStreak} = useMetricsStore();
+  const {updateCompletedCount, updateStreak, streak} = useMetricsStore();
   const theme = useTheme<AppTheme>();
   const taskMinutes = selectedTask?.minutes ?? 25
   const totalSeconds = taskMinutes * 60
@@ -29,31 +28,39 @@ export const Timer = () => {
   const [isPaused, setIsPaused] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
+  const handleTimerComplete = async () => {
+    if (selectedTask?.taskId == null) return;
+
+    editTask({ ...selectedTask, isComplete: true, taskId: selectedTask.taskId });
+    setExperience(expValidation(taskMinutes));
+    updateCompletedCount();
+    updateStreak();
+
+    const { streak, todayUpdate } = useMetricsStore.getState();
+    await refreshStreakWidget(streak, todayUpdate);
+
+    setIsTimer(false);
+    setVisible(true);
+  };
+
   useEffect(() => {
     if (!isPaused && secondsLeft > 0) {
       intervalRef.current = setInterval(() => {
         setSecondsLeft((prev: number) => {
           if (prev <= 1) {
             if (intervalRef.current) clearInterval(intervalRef.current);
-            if (selectedTask?.taskId != null) {
-              editTask({ ...selectedTask, isComplete: true, taskId: selectedTask.taskId });
-              setExperience(expValidation(taskMinutes));
-              updateCompletedCount();
-              updateStreak();
-            }
-            setIsTimer(false);
-            setVisible(true);
-            return 0
+            handleTimerComplete(); // просто вызываем
+            return 0;
           }
-          return prev - 1
-        })
-      }, 1000)
+          return prev - 1;
+        });
+      }, 1000);
     }
 
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-    }
-  }, [isPaused])
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isPaused]);
 
   const fill = Math.round(((totalSeconds - secondsLeft) / totalSeconds) * 100)
 

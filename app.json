@@ -55,6 +55,17 @@
               "description": "This is my first widget",
               "previewImage": "./assets/icon.png",
               "updatePeriodMillis": 1800000
+            },
+            {
+              "name": "Streak",
+              "label": "Streak wiget",
+              "minWidth": "320dp",
+              "minHeight": "120dp",
+              "targetCellWidth": 2,
+              "targetCellHeight": 2,
+              "description": "Streak and level wiget",
+              "previewImage": "./assets/fire.svg",
+              "updatePeriodMillis": 1800000
             }
           ]
         }
