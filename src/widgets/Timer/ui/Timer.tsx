@@ -10,7 +10,8 @@ import { View, StyleSheet, Dimensions, StatusBar } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { Button, IconButton, Surface, Text, useTheme } from 'react-native-paper'
 import { expValidation } from '@/shared/config/expValidation/expValidation'
-import { refreshStreakWidget } from '@/androidWidgets/refreshStreakWidget'
+import { refreshStreakWidget } from '@/androidWidgets/ui/StreakWidget/refreshStreakWidget'
+
 
 const { width } = Dimensions.get('window')
 
