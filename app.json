@@ -60,6 +60,7 @@
             {
               "name": "Streak",
               "label": "Streak widget",
+              "resizeMode": "horizontal",
               "minWidth": "320dp",
               "minHeight": "120dp",
               "targetCellWidth": 2,

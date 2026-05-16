@@ -34,6 +34,7 @@ export function StreakWidget({
       style={{
         height: 'match_parent',
         width: 'match_parent',
+        margin: 6,
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
@@ -46,7 +47,7 @@ export function StreakWidget({
       <FlexWidget
         style={{
           flex: 1,
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
         }}
@@ -71,13 +72,13 @@ export function StreakWidget({
         />
       </FlexWidget>
 
-      <FlexWidget style={{ width: 10 }} />
+      <FlexWidget style={{ width: 5 }} />
 
       {/* Уровень */}
       <FlexWidget
         style={{
           flex: 1,
-          flexDirection: 'column',
+          flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
         }}
