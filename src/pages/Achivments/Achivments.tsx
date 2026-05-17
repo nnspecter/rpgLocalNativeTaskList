@@ -8,23 +8,26 @@ import React from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function Main(){
+export default function Achivments(){
+  const {isTimer, setIsTimer} = useTimerStore();
   const insets = useSafeAreaInsets();
 
   return (
     <View style={{ flex: 1 }}>
+      {!isTimer ?
         <View style={{
           gap: 10,
+          width: "90%",
           paddingTop: insets.top + 5,      // отступ от шторки + зазор
           paddingBottom: insets.bottom + 5, // отступ от кнопок навигации + зазор
           alignContent: "center",
           alignSelf: "center",
         }}>
-          <Character/>
-          <Metrics/>
-          <Tasks/>
           <AfterCompleteSnackbar/>
         </View>
+      :
+        <Timer/>
+      }
     </View>
   )
 }

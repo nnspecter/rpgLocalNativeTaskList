@@ -1,31 +1,35 @@
-import { QueryClientProvider } from "@tanstack/react-query";
 import { StyleSheet, View, useColorScheme } from "react-native";
 import { lightTheme, darkTheme } from "./providers/ThemeProvider/lib/paperTheme";
-import Main from "../pages/Main/Main";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { ThemeProvider } from "./providers/ThemeProvider/ui/ThemeContext";
 import { PaperProvider } from "react-native-paper";
 import { useEffect } from "react";
 import { useTasksStore } from "@/entities/tasks";
 import { useMetricsStore } from "@/entities/metrics";
+import { useTimerStore } from "@/entities/timer";
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as NavigationBar from 'expo-navigation-bar';
-import { HelloWidgetPreviewScreen } from "@/widgets/androidWidgets/ui/HelloWidget/HelloWidgetPreviewScreen";
-
+import { DefaultTheme, DarkTheme, NavigationContainer } from '@react-navigation/native';
+import { TabNavigator } from './navigation/TabNavigator';
+import { Timer } from '@/widgets/Timer';
 
 export default function App() {
-  
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
-  const {resetDaily} = useTasksStore();
-  const {checkAndResetStreak} = useMetricsStore();
+  const { resetDaily } = useTasksStore();
+  const { checkAndResetStreak } = useMetricsStore();
+  const { isTimer } = useTimerStore();
   const bgColor = isDark ? "#121212" : "#F4F4F8";
-  
-  useEffect(()=>{
+
+  const navTheme = isDark
+    ? { ...DarkTheme, colors: { ...DarkTheme.colors, background: '#121212' } }
+    : { ...DefaultTheme, colors: { ...DefaultTheme.colors, background: '#F4F4F8' } };
+
+  useEffect(() => {
     checkAndResetStreak();
     resetDaily();
-  }, [])
+  }, []);
 
   useEffect(() => {
     NavigationBar.setBackgroundColorAsync('transparent');
@@ -42,9 +46,14 @@ export default function App() {
         />
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
           <ThemeProvider>
-            <View style={[styles.container, { backgroundColor: bgColor }]}>
-              <Main/>
-            </View>
+            <NavigationContainer theme={navTheme}>
+              <TabNavigator />
+              {isTimer && (
+                <View style={[styles.timerOverlay, { backgroundColor: bgColor }]}>
+                  <Timer />
+                </View>
+              )}
+            </NavigationContainer>
           </ThemeProvider>
         </PaperProvider>
       </SafeAreaProvider>
@@ -53,9 +62,8 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+  timerOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 100,
   },
 });

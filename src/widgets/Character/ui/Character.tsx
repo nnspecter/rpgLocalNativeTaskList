@@ -39,146 +39,99 @@ export const Character = () => {
 
     return (
         <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
+            {/* Строка: имя + уровень + XP */}
             <View style={styles.headerRow}>
-                <View style={styles.info}>
-                    <Text style={styles.name} numberOfLines={1}>
-                        {characterName}
+                <Text style={styles.name} numberOfLines={1}>
+                    {characterName}
+                </Text>
+                <View style={styles.levelChip}>
+                    <Text style={styles.levelChipText}>
+                        {i18n.t('character.level', { lvl: level })}
                     </Text>
-                    <View style={styles.levelChip}>
-                        <Text style={styles.levelChipText}>{i18n.t('character.level', { lvl: level })}</Text>
-                    </View>
                 </View>
-
-                <View style={styles.xpPill}>
-                    <Text style={styles.xpPillValue}>{experience}</Text>
-                    <Text style={styles.xpPillMax}>/{maxExperience} XP</Text>
-                </View>
-            </View>
-
-            <View style={styles.divider} />
-
-            <View style={styles.xpSection}>
-                <View style={styles.xpLabelRow}>
-                    <Text style={styles.xpLabel}>{i18n.t('character.xpLabel')}</Text>
-                    <Text style={styles.xpPercent}>{Math.round(xpPercent)}%</Text>
-                </View>
-
-                <View style={styles.track}>
-                    <Animated.View style={[styles.fill, { width: xpBarWidth }]} />
-                </View>
-
-                <Text style={styles.xpSub}>
-                    {i18n.t('character.xpToNext', { xp: maxExperience - experience, lvl: level + 1 })}
+                <Text style={styles.xpValue}>
+                    {experience}
+                    <Text style={styles.xpMax}>/{maxExperience} XP</Text>
                 </Text>
             </View>
+
+            {/* Прогресс-бар */}
+            <View style={styles.track}>
+                <Animated.View style={[styles.fill, { width: xpBarWidth }]} />
+            </View>
+
+            {/* Подпись */}
+            <Text style={styles.xpSub}>
+                {i18n.t('character.xpToNext', { xp: maxExperience - experience, lvl: level + 1 })}
+            </Text>
         </Animated.View>
     )
 }
 
-const makeStyles = (theme: AppTheme) => {
-    const PRIMARY     = theme.colors.primary
-    const PRIMARY_CTR = theme.colors.avatarBackground
-    const ON_SURFACE  = theme.colors.onSurface
-    const ON_SURF_VAR = theme.colors.onSurface
-    const OUTLINE_VAR = theme.colors.inputBackground
-
-    return StyleSheet.create({
+const makeStyles = (theme: AppTheme) =>
+    StyleSheet.create({
         card: {
             backgroundColor: theme.colors.card,
-            borderRadius: 16,
-            marginHorizontal: 16,
-            marginVertical: 8,
-            paddingHorizontal: 20,
-            paddingVertical: 18,
+            borderRadius: 12,
+            marginHorizontal: 0,
+            marginVertical: 6,
+            paddingHorizontal: 14,
+            paddingVertical: 10,
+            elevation: 2,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 1 },
-            shadowOpacity: 0.15,
-            shadowRadius: 3,
-            elevation: 2,
+            shadowOpacity: 0.12,
+            shadowRadius: 2,
+            gap: 8,
         },
         headerRow: {
             flexDirection: 'row',
             alignItems: 'center',
-            gap: 12,
-        },
-        info: {
-            flex: 1,
-            gap: 4,
+            gap: 8,
         },
         name: {
-            fontSize: 16,
+            flex: 1,
+            fontSize: 14,
             fontWeight: '600',
-            color: ON_SURFACE,
+            color: theme.colors.onSurface,
             letterSpacing: 0.15,
         },
         levelChip: {
-            alignSelf: 'flex-start',
-            backgroundColor: PRIMARY_CTR,
-            borderRadius: 8,
-            paddingHorizontal: 10,
+            backgroundColor: theme.colors.avatarBackground,
+            borderRadius: 6,
+            paddingHorizontal: 8,
             paddingVertical: 2,
         },
         levelChipText: {
-            fontSize: 12,
-            fontWeight: '500',
-            color: PRIMARY,
-            letterSpacing: 0.4,
-        },
-        xpPill: {
-            alignItems: 'flex-end',
-        },
-        xpPillValue: {
-            fontSize: 20,
-            fontWeight: '700',
-            color: ON_SURF_VAR,
-            letterSpacing: 0.15,
-        },
-        xpPillMax: {
             fontSize: 11,
-            color: ON_SURF_VAR,
-            letterSpacing: 0.4,
-        },
-        divider: {
-            height: 1,
-            backgroundColor: OUTLINE_VAR,
-            marginVertical: 14,
-        },
-        xpSection: {
-            gap: 6,
-        },
-        xpLabelRow: {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-        },
-        xpLabel: {
-            fontSize: 12,
             fontWeight: '500',
-            color: ON_SURF_VAR,
+            color: theme.colors.primary,
             letterSpacing: 0.4,
-            textTransform: 'uppercase',
         },
-        xpPercent: {
-            fontSize: 12,
-            fontWeight: '600',
-            color: PRIMARY,
-            letterSpacing: 0.4,
+        xpValue: {
+            fontSize: 14,
+            fontWeight: '700',
+            color: theme.colors.onSurface,
+        },
+        xpMax: {
+            fontSize: 11,
+            fontWeight: '400',
+            color: theme.colors.onSurface,
         },
         track: {
-            height: 8,
-            backgroundColor: PRIMARY_CTR,
-            borderRadius: 4,
+            height: 6,
+            backgroundColor: theme.colors.avatarBackground,
+            borderRadius: 3,
             overflow: 'hidden',
         },
         fill: {
             height: '100%',
-            backgroundColor: PRIMARY,
-            borderRadius: 4,
+            backgroundColor: theme.colors.primary,
+            borderRadius: 3,
         },
         xpSub: {
             fontSize: 11,
-            color: ON_SURF_VAR,
-            letterSpacing: 0.4,
+            color: theme.colors.onSurface,
+            letterSpacing: 0.3,
         },
     })
-}
