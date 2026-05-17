@@ -68,11 +68,11 @@ export function StreakWidget2x2({
           }
           imageWidth={24}
           imageHeight={24}
-          style={{ marginLeft: 4 }}
+          style={{ marginLeft: 2 }}
         />
       </FlexWidget>
 
-      <FlexWidget style={{ width: 3 }} />
+      <FlexWidget style={{ width: 1 }} />
 
       {/* Уровень */}
       <FlexWidget

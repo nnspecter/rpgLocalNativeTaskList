@@ -4,7 +4,7 @@ import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
 import { StreakWidget5x2 } from './ui/StreakWidget/StreakWidget5x2';
 import { getMetrics } from './lib/getMetrics';
 import { getLevel } from './lib/getLevel';
-import { StreakWidget2x2 } from './ui/StreakWidget/StreakWiget2x2';
+import { StreakWidget2x2 } from './ui/StreakWidget/StreakWidget2x2';
 
 
 const nameToWidget = {

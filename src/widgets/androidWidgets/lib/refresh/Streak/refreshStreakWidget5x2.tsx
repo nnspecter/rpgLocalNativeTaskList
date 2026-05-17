@@ -1,14 +1,14 @@
 import { requestWidgetUpdate } from 'react-native-android-widget';
-import { StreakWidget } from '@/androidWidgets/ui/StreakWidget/StreakWidget5x2';
+import { StreakWidget5x2 } from '@/widgets/androidWidgets/ui/StreakWidget/StreakWidget5x2';
 import { Appearance } from 'react-native';
 
-export async function refreshStreakWidget(streak: number, todayUpdate: boolean) {
+export async function refreshStreakWidget5x2(streak: number, todayUpdate: boolean) {
   const isDark = Appearance.getColorScheme() === 'dark';
 
   await requestWidgetUpdate({
     widgetName: 'Streak',
     renderWidget: () => (
-      <StreakWidget isDark={isDark} streak={streak} todayUpdate={todayUpdate} />
+      <StreakWidget5x2 isDark={isDark} streak={streak} todayUpdate={todayUpdate} />
     ),
     widgetNotFound: () => {},
   });
