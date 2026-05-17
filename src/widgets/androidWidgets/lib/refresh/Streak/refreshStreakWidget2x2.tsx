@@ -6,7 +6,7 @@ export async function refreshStreakWidget2x2(streak: number, todayUpdate: boolea
   const isDark = Appearance.getColorScheme() === 'dark';
 
   await requestWidgetUpdate({
-    widgetName: 'Streak',
+    widgetName: 'Streak2',
     renderWidget: () => (
       <StreakWidget2x2 isDark={isDark} streak={streak} todayUpdate={todayUpdate} level={level} />
     ),
