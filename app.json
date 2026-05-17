@@ -56,7 +56,7 @@
             "targetCellHeight": 2,
             "resizeMode": "none",
             "description": "Streak and level widget",
-            "previewImage": "./assets/icon.png",
+            "previewImage": "./assets/widgets/Streak2x2.png",
             "updatePeriodMillis": 1800000
           },
           {
@@ -68,7 +68,7 @@
             "targetCellWidth": 5,
             "targetCellHeight": 2,
             "description": "Streak and level widget",
-            "previewImage": "./assets/widgets/fire.png",
+            "previewImage": "./assets/widgets/Streak5x2.png",
             "updatePeriodMillis": 1800000
           }
         ]
