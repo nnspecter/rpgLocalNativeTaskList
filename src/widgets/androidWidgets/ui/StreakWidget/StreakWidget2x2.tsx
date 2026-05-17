@@ -34,7 +34,7 @@ export function StreakWidget2x2({
       style={{
         height: 'match_parent',
         width: 'match_parent',
-        margin: 3,
+        padding: 4,
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
