@@ -21,7 +21,7 @@ interface StreakWidgetProps {
   level?: number;
 }
 
-export function StreakWidget({
+export function StreakWidget2x2({
   isDark = false,
   streak = 0,
   todayUpdate = false,
@@ -35,7 +35,7 @@ export function StreakWidget({
         height: 'match_parent',
         width: 'match_parent',
         margin: 3,
-        flexDirection: 'row',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: theme.background,
@@ -84,7 +84,7 @@ export function StreakWidget({
         }}
       >
         <TextWidget
-          text={` ${level}`}
+          text={`${level}`}
           style={{
             fontSize: 32,
             fontFamily: 'Inter',
@@ -92,6 +92,7 @@ export function StreakWidget({
             
           }}
         />
+        <FlexWidget style={{ width: 4 }} />
         <TextWidget
           text="lvl"
           style={{

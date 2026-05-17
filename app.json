@@ -46,25 +46,28 @@
       {
         "widgets": [
           {
-            "name": "Hello",
-            "label": "My Hello Widget",
-            "minWidth": "320dp",
-            "minHeight": "120dp",
-            "targetCellWidth": 5,
+            "name": "Streak2",
+            "label": "Streak 2x2 widget",
+            "minWidth": "110dp",
+            "minHeight": "110dp",
+            "maxWidth": "110dp",
+            "maxHeight": "110dp",
+            "targetCellWidth": 2,
             "targetCellHeight": 2,
-            "description": "This is my first widget",
+            "resizeMode": "none",
+            "description": "Streak and level widget",
             "previewImage": "./assets/icon.png",
             "updatePeriodMillis": 1800000
           },
           {
-            "name": "Streak",
-            "label": "Streak widget",
+            "name": "Streak5",
+            "label": "Streak 5x2 widget",
             "resizeMode": "horizontal",
             "minWidth": "320dp",
             "minHeight": "120dp",
-            "targetCellWidth": 2,
+            "targetCellWidth": 5,
             "targetCellHeight": 2,
-            "description": "Streak and level wiget",
+            "description": "Streak and level widget",
             "previewImage": "./assets/widgets/fire.png",
             "updatePeriodMillis": 1800000
           }

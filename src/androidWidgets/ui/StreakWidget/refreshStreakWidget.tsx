@@ -1,5 +1,5 @@
 import { requestWidgetUpdate } from 'react-native-android-widget';
-import { StreakWidget } from '@/androidWidgets/ui/StreakWidget/StreakWidget';
+import { StreakWidget } from '@/androidWidgets/ui/StreakWidget/StreakWidget5x2';
 import { Appearance } from 'react-native';
 
 export async function refreshStreakWidget(streak: number, todayUpdate: boolean) {

@@ -1,15 +1,15 @@
 import React from 'react';
 import { Appearance, Linking } from 'react-native';
 import type { WidgetTaskHandlerProps } from 'react-native-android-widget';
-import { HelloWidget } from './ui/HelloWidget/HelloWidget';
-import { StreakWidget } from './ui/StreakWidget/StreakWidget';
+import { StreakWidget5x2 } from './ui/StreakWidget/StreakWidget5x2';
 import { getMetrics } from './lib/getMetrics';
 import { getLevel } from './lib/getLevel';
+import { StreakWidget2x2 } from './ui/StreakWidget/StreakWiget2x2';
 
 
 const nameToWidget = {
-  Hello: HelloWidget,
-  Streak: StreakWidget,
+  Streak5: StreakWidget5x2,
+  Streak2: StreakWidget2x2
 };
 
 export async function widgetTaskHandler(props: WidgetTaskHandlerProps) {
