@@ -52,7 +52,7 @@ export const useMetricsStore = create<UserStore>()(
           }
 
           if (state.streakDate === today) {
-            return {};
+            return { todayUpdate: true }; // ← было пустой объект
           }
 
           const yesterday = toDateString(

@@ -37,10 +37,11 @@ export const Timer = () => {
     setExperience(expValidation(taskMinutes));
     updateCompletedCount();
     updateStreak();
-
+  
     const { streak, todayUpdate } = useMetricsStore.getState();
-    await refreshStreakWidget5x2(streak, todayUpdate);
-    await refreshStreakWidget2x2(streak, todayUpdate);
+    const { level } = useCharacterStore.getState();
+    await refreshStreakWidget5x2(streak, todayUpdate, level);
+    await refreshStreakWidget2x2(streak, todayUpdate, level);
 
     setIsTimer(false);
     setVisible(true);
