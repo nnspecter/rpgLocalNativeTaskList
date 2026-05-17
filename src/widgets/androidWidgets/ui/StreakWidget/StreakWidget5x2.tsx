@@ -63,8 +63,8 @@ export function StreakWidget5x2({
         <ImageWidget
           image={
             todayUpdate
-              ? require('../../../../assets/widgets/fire.png')
-              : require('../../../../assets/widgets/fire-grey.png')
+              ? require('@assets/widgets/fire.png')
+              : require('@assets/widgets/fire-grey.png')
           }
           imageWidth={24}
           imageHeight={24}
