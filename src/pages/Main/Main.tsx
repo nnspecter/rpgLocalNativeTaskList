@@ -2,6 +2,7 @@ import { AfterCompleteSnackbar } from '@/shared/ui/Snackbar';
 import { Character } from '@/widgets/Character';
 import { Metrics } from '@/widgets/Metrics';
 import { Tasks } from '@/widgets/Tasks';
+import NewTaskDialog from '@/widgets/Tasks/ui/NewTask/NewTaskDialog';
 import React from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,8 +14,8 @@ export default function Main(){
     <View style={{ flex: 1 }}>
         <View style={{
           gap: 10,
-          paddingTop: insets.top + 5,      // отступ от шторки + зазор
-          paddingBottom: insets.bottom + 5, // отступ от кнопок навигации + зазор
+          paddingTop: insets.top + 5,
+          paddingBottom: insets.bottom + 5,
           alignContent: "center",
           alignSelf: "center",
         }}>
@@ -22,6 +23,7 @@ export default function Main(){
           <Tasks/>
           <Metrics/>
           <AfterCompleteSnackbar/>
+          <NewTaskDialog />
         </View>
     </View>
   )

@@ -1,5 +1,6 @@
 import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme';
 import { AddTask, useTasksStore } from '@/entities/tasks';
+import { useTaskDialogStore } from '@/shared/ui/TaskDialogControl';
 import { TimeSetter } from '@/shared/ui/TimeSetter';
 import i18n from '@/shared/config/i18n';
 import { useEffect, useState } from 'react';
@@ -9,7 +10,8 @@ import { Button, Dialog, Portal, TextInput, useTheme } from 'react-native-paper'
 
 export default function NewTaskDialog() {
   const theme = useTheme<AppTheme>();
-  const [visible, setVisible] = useState(false);
+  const visible = useTaskDialogStore((s) => s.visible);
+  const close = useTaskDialogStore((s) => s.close);
   const addTask = useTasksStore((state) => state.addTask);
   const [newTask, setNewTask] = useState<AddTask>({
     taskName: "",
@@ -21,7 +23,10 @@ export default function NewTaskDialog() {
     console.log(newTask.time)
   }, [newTask])
 
-  const hideDialog = () => setVisible(false);
+  const hideDialog = () => {
+    close();
+    setNewTask({ taskName: "", description: "", time: 0 });
+  };
   const setTime = (time: number) => {
     setNewTask(prev => ({ ...prev, time }));
   };
@@ -36,15 +41,6 @@ export default function NewTaskDialog() {
   const styles = makeStyles(theme);
 
   return (
-    <View>
-      <Button
-        mode="contained"
-        onPress={() => setVisible(true)}
-        style={styles.createBtn}
-      >
-        {i18n.t('taskDialog.newTask.createBtn')}
-      </Button>
-
       <Portal>
         <Dialog visible={visible} onDismiss={hideDialog} style={styles.dialog}>
           <Dialog.Title style={styles.dialogTitle}>{i18n.t('taskDialog.newTask.title')}</Dialog.Title>
@@ -92,7 +88,6 @@ export default function NewTaskDialog() {
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </View>
   );
 }
 
@@ -127,11 +122,6 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
     marginTop: 10,
     width: '100%',
     alignItems: 'center',
-  },
-  createBtn: {
-    borderRadius: 10,
-    backgroundColor: theme.colors.primary,
-    borderColor: theme.colors.primary,
   },
   actions: {
     paddingHorizontal: 15,

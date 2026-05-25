@@ -3,14 +3,22 @@ import React from 'react';
 import { FlexWidget, ImageWidget, TextWidget } from 'react-native-android-widget';
 import { ColorProp } from 'react-native-android-widget';
 
-const themes: Record<'light' | 'dark', { background: ColorProp; text: ColorProp }> = {
+const themes: Record<'light' | 'dark', { card: ColorProp; text: ColorProp; primary: ColorProp; chipBg: ColorProp; chipText: ColorProp; muted: ColorProp }> = {
   light: {
-    background: '#F4F4F8' as ColorProp,
-    text: '#121212' as ColorProp,
+    card: '#FFFFFF' as ColorProp,
+    text: '#1C1B1F' as ColorProp,
+    primary: '#7C3AED' as ColorProp,
+    chipBg: '#EEF0FF' as ColorProp,
+    chipText: '#534AB7' as ColorProp,
+    muted: '#9E9E9E' as ColorProp,
   },
   dark: {
-    background: '#121212' as ColorProp,
-    text: '#F4F4F8' as ColorProp,
+    card: '#1E1E2E' as ColorProp,
+    text: '#E6E1E5' as ColorProp,
+    primary: '#A78BFA' as ColorProp,
+    chipBg: '#2D2B55' as ColorProp,
+    chipText: '#AFA9EC' as ColorProp,
+    muted: '#6B7280' as ColorProp,
   },
 };
 
@@ -34,28 +42,27 @@ export function StreakWidget5x2({
       style={{
         height: 'match_parent',
         width: 'match_parent',
-        padding: 4,
+        paddingHorizontal: 16,
         flexDirection: 'row',
-        justifyContent: 'center',
+        justifyContent: 'space-between',
         alignItems: 'center',
-        backgroundColor: theme.background,
-        borderRadius: 16,
+        backgroundColor: theme.card,
+        borderRadius: 12,
       }}
+      clickAction="OPEN_APP"
       accessibilityLabel="Streak widget"
     >
       {/* Стрик */}
       <FlexWidget
         style={{
-          flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center',
         }}
       >
         <TextWidget
           text={`${streak}`}
           style={{
-            fontSize: 32,
+            fontSize: 36,
             fontFamily: 'Inter',
             color: theme.text,
           }}
@@ -66,39 +73,39 @@ export function StreakWidget5x2({
               ? require('@assets/widgets/fire.png')
               : require('@assets/widgets/fire-grey.png')
           }
-          imageWidth={24}
-          imageHeight={24}
+          imageWidth={26}
+          imageHeight={26}
           style={{ marginLeft: 4 }}
         />
       </FlexWidget>
 
-      <FlexWidget style={{ width: 3 }} />
-
-      {/* Уровень */}
+      {/* Уровень (чип) */}
       <FlexWidget
         style={{
-          flex: 1,
+          backgroundColor: theme.chipBg,
+          borderRadius: 6,
+          paddingHorizontal: 12,
+          paddingVertical: 4,
           flexDirection: 'row',
           alignItems: 'center',
-          justifyContent: 'center',
         }}
       >
         <TextWidget
-          text={`${level}`}
+          text="lvl"
           style={{
-            fontSize: 32,
+            fontSize: 13,
             fontFamily: 'Inter',
-            color: theme.text,
-            
+            color: theme.chipText,
           }}
         />
         <FlexWidget style={{ width: 4 }} />
         <TextWidget
-          text="lvl"
+          text={`${level}`}
           style={{
-            fontSize: 28,
+            fontSize: 16,
             fontFamily: 'Inter',
-            color: theme.text,
+            color: theme.chipText,
+            fontWeight: '700',
           }}
         />
       </FlexWidget>

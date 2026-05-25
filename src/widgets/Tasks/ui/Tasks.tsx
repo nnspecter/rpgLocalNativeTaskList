@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, useWindowDimensions, View, TouchableOpacity } from 'react-native'
 import OneTask from './Task/Task';
-import NewTaskDialog from './NewTask/NewTaskDialog';
 import { Text, useTheme } from 'react-native-paper';
 import { useTasksStore } from '@/entities/tasks';
 import i18n from '@/shared/config/i18n';
@@ -78,7 +77,6 @@ export const Tasks = () => {
         {sortedTasks.map((task) => (
           <OneTask data={task} key={`task-${task.taskId}`} />
         ))}
-        <NewTaskDialog />
       </ScrollView>
     </View>
   );
