@@ -46,37 +46,41 @@ export function StreakWidget2x2({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: theme.card,
-        borderRadius: 12,
+        borderRadius: 20,
+        paddingVertical: 16,
+        paddingHorizontal: 12,
       }}
       clickAction="OPEN_APP"
       accessibilityLabel="Streak widget"
     >
+      {/* Лейбл "streak" */}
+      <TextWidget
+        text="streak"
+        style={{
+          fontSize: 13,
+          fontFamily: 'Inter',
+          color: theme.muted,
+          marginBottom: 2,
+        }}
+      />
+
       {/* Стрик */}
       <FlexWidget
         style={{
-          flex: 1,
           flexDirection: 'row',
           alignItems: 'center',
           justifyContent: 'center',
+          marginBottom: 12,
         }}
       >
         <TextWidget
           text={`${streak}`}
           style={{
-            fontSize: 36,
+            fontSize: 48,
             fontFamily: 'Inter',
-            color: theme.text,
+            fontWeight: '700',
+            color: todayUpdate ? theme.primary : theme.muted,
           }}
-        />
-        <ImageWidget
-          image={
-            todayUpdate
-              ? require('@assets/widgets/fire.png')
-              : require('@assets/widgets/fire-grey.png')
-          }
-          imageWidth={26}
-          imageHeight={26}
-          style={{ marginLeft: 3 }}
         />
       </FlexWidget>
 
@@ -84,8 +88,8 @@ export function StreakWidget2x2({
       <FlexWidget
         style={{
           backgroundColor: theme.chipBg,
-          borderRadius: 6,
-          paddingHorizontal: 10,
+          borderRadius: 8,
+          paddingHorizontal: 12,
           paddingVertical: 4,
           flexDirection: 'row',
           alignItems: 'center',
@@ -93,21 +97,12 @@ export function StreakWidget2x2({
         }}
       >
         <TextWidget
-          text="lvl"
+          text={`lvl ${level}`}
           style={{
-            fontSize: 12,
+            fontSize: 13,
             fontFamily: 'Inter',
             color: theme.chipText,
-          }}
-        />
-        <FlexWidget style={{ width: 4 }} />
-        <TextWidget
-          text={`${level}`}
-          style={{
-            fontSize: 14,
-            fontFamily: 'Inter',
-            color: theme.chipText,
-            fontWeight: '700',
+            fontWeight: '600',
           }}
         />
       </FlexWidget>
