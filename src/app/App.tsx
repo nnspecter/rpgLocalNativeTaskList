@@ -1,7 +1,6 @@
 import { StyleSheet, View, useColorScheme } from "react-native";
 import { lightTheme, darkTheme } from "./providers/ThemeProvider/lib/paperTheme";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { ThemeProvider } from "./providers/ThemeProvider/ui/ThemeContext";
 import { PaperProvider } from "react-native-paper";
 import { useEffect } from "react";
 import { useTasksStore } from "@/entities/tasks";
@@ -45,16 +44,14 @@ export default function App() {
           style={isDark ? "light" : "dark"}
         />
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
-          <ThemeProvider>
-            <NavigationContainer theme={navTheme}>
-              <TabNavigator />
-              {isTimer && (
-                <View style={[styles.timerOverlay, { backgroundColor: bgColor }]}>
-                  <Timer />
-                </View>
-              )}
-            </NavigationContainer>
-          </ThemeProvider>
+          <NavigationContainer theme={navTheme}>
+            <TabNavigator />
+            {isTimer && (
+              <View style={[styles.timerOverlay, { backgroundColor: bgColor }]}>
+                <Timer />
+              </View>
+            )}
+          </NavigationContainer>
         </PaperProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>

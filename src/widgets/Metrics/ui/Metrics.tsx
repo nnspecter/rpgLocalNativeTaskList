@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, View, useColorScheme } from 'react-native'
 import { useTheme } from 'react-native-paper'
-import { useMetrics } from '../../../../api/queries/queries'
 import OneMetric from './OneMetric/OneMetric'
 import i18n from '../../../shared/config/i18n'
 import { AppTheme } from '../../../app/providers/ThemeProvider/lib/paperTheme'

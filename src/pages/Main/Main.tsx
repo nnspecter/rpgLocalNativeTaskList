@@ -1,9 +1,7 @@
-import { useTimerStore } from '@/entities/timer';
 import { AfterCompleteSnackbar } from '@/shared/ui/Snackbar';
 import { Character } from '@/widgets/Character';
 import { Metrics } from '@/widgets/Metrics';
 import { Tasks } from '@/widgets/Tasks';
-import { Timer } from '@/widgets/Timer';
 import React from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,8 +19,8 @@ export default function Main(){
           alignSelf: "center",
         }}>
           <Character/>
-          <Metrics/>
           <Tasks/>
+          <Metrics/>
           <AfterCompleteSnackbar/>
         </View>
     </View>

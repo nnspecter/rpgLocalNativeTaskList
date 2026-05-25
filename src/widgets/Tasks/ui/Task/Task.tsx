@@ -11,7 +11,7 @@ import { Task } from '@/entities/tasks';
 import { useTimerStore } from '@/entities/timer';
 import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme';
 import { formatMinutes } from '@/shared/config/TimeFormatters/formatMinutes';
-import { expValidation } from '@/shared/config/expValidation/expValidation';
+import { expValidation } from '@/features/expValidation/expValidation';
 
 export default function OneTask({ data }: { data: Task }) {
   const { setSelectedTask, setIsTimer } = useTimerStore();

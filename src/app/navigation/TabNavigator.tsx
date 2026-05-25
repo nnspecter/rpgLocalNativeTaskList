@@ -4,7 +4,8 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs';
 import Main from '@/pages/Main/Main';
-import Achivments from '@/pages/Achivments/Achivments';
+import AchievementsPage from '@/pages/Achievements/Achievements';
+
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -61,7 +62,7 @@ export function TabNavigator() {
       }}
     >
       <Tab.Screen name="Home" component={Main} />
-      <Tab.Screen name="Stats" component={Achivments} />
+      <Tab.Screen name="Stats" component={AchievementsPage} />
     </Tab.Navigator>
   );
 }

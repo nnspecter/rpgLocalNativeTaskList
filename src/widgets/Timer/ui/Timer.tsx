@@ -9,7 +9,8 @@ import React, { useState, useEffect, useRef } from 'react'
 import { View, StyleSheet, Dimensions, StatusBar } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { Button, IconButton, Surface, Text, useTheme } from 'react-native-paper'
-import { expValidation } from '@/shared/config/expValidation/expValidation'
+import { expValidation } from '@/features/expValidation/expValidation'
+import { checkAchievements } from '@/features/achievements/model/checkAchievements'
 import { refreshStreakWidget2x2, refreshStreakWidget5x2 } from '@/widgets/androidWidgets/lib/refresh'
 
 
@@ -21,7 +22,7 @@ export const Timer = () => {
   const { setVisible } = useSnacbarControlStore();
   const {editTask} = useTasksStore();
   const {setExperience} = useCharacterStore();
-  const {updateCompletedCount, updateStreak, streak} = useMetricsStore();
+  const {updateCompletedCount, updateStreak, updateTodayCompletedTasks} = useMetricsStore();
   const theme = useTheme<AppTheme>();
   const taskMinutes = selectedTask?.minutes ?? 25
   const totalSeconds = taskMinutes * 60
@@ -36,7 +37,10 @@ export const Timer = () => {
     editTask({ ...selectedTask, isComplete: true, taskId: selectedTask.taskId });
     setExperience(expValidation(taskMinutes));
     updateCompletedCount();
+    updateTodayCompletedTasks(taskMinutes);
     updateStreak();
+
+    checkAchievements();
   
     const { streak, todayUpdate } = useMetricsStore.getState();
     const { level } = useCharacterStore.getState();

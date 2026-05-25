@@ -1,20 +1,15 @@
 import { useTimerStore } from '@/entities/timer';
-import { AfterCompleteSnackbar } from '@/shared/ui/Snackbar';
-import { Character } from '@/widgets/Character';
-import { Metrics } from '@/widgets/Metrics';
-import { Tasks } from '@/widgets/Tasks';
-import { Timer } from '@/widgets/Timer';
+import { AchievementsList } from '@/widgets/Achievements/ui/AchievementsList';
 import React from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-export default function Achivments(){
+export default function AchievementsPage(){
   const {isTimer, setIsTimer} = useTimerStore();
   const insets = useSafeAreaInsets();
 
   return (
     <View style={{ flex: 1 }}>
-      {!isTimer ?
         <View style={{
           gap: 10,
           width: "90%",
@@ -23,11 +18,8 @@ export default function Achivments(){
           alignContent: "center",
           alignSelf: "center",
         }}>
-          <AfterCompleteSnackbar/>
+          <AchievementsList/>
         </View>
-      :
-        <Timer/>
-      }
     </View>
   )
 }
