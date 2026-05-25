@@ -1,7 +1,8 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, TouchableOpacity } from 'react-native'
 import { Surface, Text, Icon, useTheme } from 'react-native-paper'
 import { AppTheme } from '../../../app/providers/ThemeProvider/lib/paperTheme'
+import i18n from '@/shared/config/i18n'
 
 export interface Achievement {
   id: number
@@ -21,18 +22,20 @@ const getColors = (isDark: boolean) => ({
   lockedText: isDark ? '#555' : '#aaa',
 })
 
-export const AchievementCard: React.FC<Achievement> = ({
+export const AchievementCard: React.FC<Achievement & { onPress: () => void }> = ({
   name,
   boost,
   desc,
   isOpen,
   isActive,
+  onPress,
 }) => {
   const theme = useTheme<AppTheme>()
   const isDark = theme.dark
   const C = getColors(isDark)
 
   return (
+    <TouchableOpacity activeOpacity={0.7} onPress={onPress} disabled={!isOpen}>
     <Surface
       style={[
         styles.card,
@@ -47,80 +50,101 @@ export const AchievementCard: React.FC<Achievement> = ({
       ]}
       elevation={isActive ? 2 : 1}
     >
-      <View style={styles.header}>
-        <Text
-          variant="labelLarge"
-          style={[
-            styles.name,
-            { color: isOpen ? theme.colors.onSurface : theme.colors.onSurfaceDisabled },
-          ]}
-          numberOfLines={2}
-        >
-          {name}
-        </Text>
+      <View style={styles.inner}>
+        <View style={styles.top}>
+          <View style={styles.header}>
+            <Text
+              variant="labelLarge"
+              style={[
+                styles.name,
+                { color: isOpen ? theme.colors.onSurface : theme.colors.onSurfaceDisabled },
+              ]}
+              numberOfLines={2}
+            >
+              {name}
+            </Text>
 
-        <View
-          style={[
-            styles.badge,
-            {
-              backgroundColor: isOpen ? C.badge.bg : isDark ? '#2A2A2A' : '#E0E0E0',
-              borderColor: theme.colors.outlineVariant,
-              borderWidth: isOpen ? 0 : 0.5,
-            },
-          ]}
-        >
-          <Icon
-            source="lightning-bolt"
-            size={11}
-            color={isOpen ? C.badge.text : C.lockedText}
-          />
+            <View
+              style={[
+                styles.badge,
+                {
+                  backgroundColor: isOpen ? C.badge.bg : isDark ? '#2A2A2A' : '#E0E0E0',
+                  borderColor: theme.colors.outlineVariant,
+                  borderWidth: isOpen ? 0 : 0.5,
+                },
+              ]}
+            >
+              <Icon
+                source="lightning-bolt"
+                size={11}
+                color={isOpen ? C.badge.text : C.lockedText}
+              />
+              <Text
+                variant="labelSmall"
+                style={{ color: isOpen ? C.badge.text : C.lockedText, fontWeight: '500' }}
+              >
+                +{boost}%
+              </Text>
+            </View>
+          </View>
+
           <Text
-            variant="labelSmall"
-            style={{ color: isOpen ? C.badge.text : C.lockedText, fontWeight: '500' }}
+            variant="bodySmall"
+            style={[
+              styles.desc,
+              { color: isOpen ? theme.colors.onSurfaceVariant : C.lockedText },
+            ]}
+            numberOfLines={3}
           >
-            +{boost}%
+            {desc}
           </Text>
         </View>
+
+        {isOpen && isActive && (
+          <View style={styles.statusRow}>
+            <Icon source="circle-medium" size={14} color={C.activeBorder} />
+            <Text variant="labelSmall" style={{ color: C.activeBorder, fontSize: 11 }}>
+              {i18n.t('achievements.active')}
+            </Text>
+          </View>
+        )}
+
+        {isOpen && !isActive && (
+          <View style={styles.statusRow}>
+            <Icon source="circle-outline" size={14} color={theme.colors.onSurfaceVariant} />
+            <Text variant="labelSmall" style={{ color: theme.colors.onSurfaceVariant, fontSize: 11 }}>
+              {i18n.t('achievements.inactive')}
+            </Text>
+          </View>
+        )}
+
+        {!isOpen && (
+          <View style={styles.statusRow}>
+            <Icon source="lock-outline" size={12} color={C.lockedText} />
+            <Text variant="labelSmall" style={{ color: C.lockedText, fontSize: 11 }}>
+              {i18n.t('achievements.locked')}
+            </Text>
+          </View>
+        )}
       </View>
-
-      <Text
-        variant="bodySmall"
-        style={[
-          styles.desc,
-          { color: isOpen ? theme.colors.onSurfaceVariant : C.lockedText },
-        ]}
-        numberOfLines={3}
-      >
-        {desc}
-      </Text>
-
-      {isActive && (
-        <View style={styles.statusRow}>
-          <Icon source="circle-medium" size={14} color={C.activeBorder} />
-          <Text variant="labelSmall" style={{ color: C.activeBorder, fontSize: 11 }}>
-            Активно
-          </Text>
-        </View>
-      )}
-
-      {!isOpen && (
-        <View style={styles.statusRow}>
-          <Icon source="lock-outline" size={12} color={C.lockedText} />
-          <Text variant="labelSmall" style={{ color: C.lockedText, fontSize: 11 }}>
-            Заблокировано
-          </Text>
-        </View>
-      )}
     </Surface>
+    </TouchableOpacity>
   )
 }
 
 const styles = StyleSheet.create({
   card: {
     width: 160,
+    height: 165,
     borderRadius: 12,
     padding: 14,
     paddingBottom: 12,
+  },
+  inner: {
+    flex: 1,
+    justifyContent: 'space-between',
+  },
+  top: {
     gap: 6,
   },
   header: {
@@ -151,6 +175,5 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    marginTop: 2,
   },
 })

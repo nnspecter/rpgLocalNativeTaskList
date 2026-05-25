@@ -67,6 +67,15 @@ export default {
     xpToNext: "{{xp}} XP до уровня {{lvl}}",
   },
 
+  achievements: {
+    bonuses: "Бонусы",
+    subtitle: "Активируйте бонусы и получайте дополнительный опыт",
+    activeCount: "Активно {{count}} из 2",
+    active: "Активно",
+    inactive: "Не активно",
+    locked: "Заблокировано",
+  },
+
   timer: {
     paused: "пауза",
     remaining: "осталось",

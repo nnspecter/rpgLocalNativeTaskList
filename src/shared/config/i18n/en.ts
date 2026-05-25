@@ -65,6 +65,15 @@ export default {
     xpLabel: "Experience",
     xpToNext: "{{xp}} XP to level {{lvl}}",
   },
+  achievements: {
+    bonuses: "Bonuses",
+    subtitle: "Activate bonuses and gain extra experience",
+    activeCount: "Active {{count}} of 2",
+    active: "Active",
+    inactive: "Inactive",
+    locked: "Locked",
+  },
+
   timer: {
     paused: "paused",
     remaining: "remaining",

@@ -1,5 +1,6 @@
 import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme'
 import { useCharacterStore } from '@/entities/character'
+import { useAchievementsStore } from '@/entities/Achievements'
 import i18n from '@/shared/config/i18n'
 import React, { useEffect, useRef } from 'react'
 import { View, StyleSheet, Animated } from 'react-native'
@@ -8,6 +9,10 @@ import { Text, useTheme } from 'react-native-paper'
 export const Character = () => {
     const theme = useTheme<AppTheme>()
     const { characterName, experience, maxExperience, level } = useCharacterStore()
+    const achievements = useAchievementsStore((state) => state.achievements)
+    const totalBoost = achievements
+      .filter((a) => a.isActive)
+      .reduce((sum, a) => sum + a.boost, 0)
 
     const xpPercent = (experience / maxExperience) * 100
 
@@ -64,6 +69,12 @@ export const Character = () => {
             <Text style={styles.xpSub}>
                 {i18n.t('character.xpToNext', { xp: maxExperience - experience, lvl: level + 1 })}
             </Text>
+
+            {totalBoost > 0 && (
+              <Text style={styles.boostText}>
+                +{totalBoost}% XP boost
+              </Text>
+            )}
         </Animated.View>
     )
 }
@@ -132,6 +143,12 @@ const makeStyles = (theme: AppTheme) =>
         xpSub: {
             fontSize: 11,
             color: theme.colors.onSurface,
+            letterSpacing: 0.3,
+        },
+        boostText: {
+            fontSize: 11,
+            fontWeight: '600',
+            color: theme.colors.primary,
             letterSpacing: 0.3,
         },
     })

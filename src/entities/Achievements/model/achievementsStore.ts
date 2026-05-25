@@ -18,16 +18,24 @@ export const useAchievementsStore = create<AchievementsStore>()(
       achievements: allAchievements,
       //Изменить активное состояние
       setActive: (id: number) => {
-        set((state) => ({
-          achievements: state.achievements.map((achievement) =>
-            (achievement.id === id && achievement.isOpen)
-              ? {
-                  ...achievement,
-                  isActive: !achievement.isActive,
-                }
-              : achievement
-          ),
-        }));
+        set((state) => {
+          const target = state.achievements.find((a) => a.id === id);
+          if (!target || !target.isOpen) return {};
+
+          // Если пытаемся включить, но уже 2 активных — не даём
+          if (!target.isActive) {
+            const activeCount = state.achievements.filter((a) => a.isActive).length;
+            if (activeCount >= 2) return {};
+          }
+
+          return {
+            achievements: state.achievements.map((achievement) =>
+              achievement.id === id
+                ? { ...achievement, isActive: !achievement.isActive }
+                : achievement
+            ),
+          };
+        });
       },
       //Открытие ачивки
       setOpen: (id: number) => {
