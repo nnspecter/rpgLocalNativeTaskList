@@ -18,8 +18,8 @@ export default function AchievementsPage(){
         <View style={{
           gap: 4,
           width: "90%",
-          paddingTop: insets.top + 5,
-          paddingBottom: insets.bottom + 5,
+          paddingTop: insets.top + 2,
+          paddingBottom: 8 ,
           alignContent: "center",
           alignSelf: "center",
           flex: 1,

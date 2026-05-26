@@ -14,8 +14,8 @@ export default function Main(){
     <View style={{ flex: 1 }}>
         <View style={{
           gap: 10,
-          paddingTop: insets.top + 5,
-          paddingBottom: insets.bottom + 5,
+          paddingTop: insets.top +2,
+          paddingBottom: 10,
           alignContent: "center",
           alignSelf: "center",
         }}>
