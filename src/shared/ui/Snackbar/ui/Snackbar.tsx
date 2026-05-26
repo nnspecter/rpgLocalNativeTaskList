@@ -1,6 +1,7 @@
 import { View, StyleSheet } from 'react-native';
 import { Snackbar } from 'react-native-paper';
 import { useSnacbarControlStore } from '../model/snackbarControlStore';
+import i18n from '@/shared/config/i18n';
 import { useEffect } from 'react';
 
 export const AfterCompleteSnackbar = () => {
@@ -22,7 +23,7 @@ export const AfterCompleteSnackbar = () => {
         visible={isVisible}
         onDismiss={onDismissSnackBar}
         duration={3000}>
-        Задача успешно завершена!
+        {i18n.t('snackbar.taskCompleted')}
       </Snackbar>
     </View>
   );

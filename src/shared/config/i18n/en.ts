@@ -74,6 +74,10 @@ export default {
     locked: "Locked",
   },
 
+  snackbar: {
+    taskCompleted: "Task completed successfully!",
+  },
+
   timer: {
     paused: "paused",
     remaining: "remaining",

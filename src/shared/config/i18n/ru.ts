@@ -76,6 +76,10 @@ export default {
     locked: "Заблокировано",
   },
 
+  snackbar: {
+    taskCompleted: "Задача успешно завершена!",
+  },
+
   timer: {
     paused: "пауза",
     remaining: "осталось",
