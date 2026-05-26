@@ -41,7 +41,7 @@ function BottomBar({ state, navigation }: MaterialTopTabBarProps) {
   };
 
   const bgColor      = isDark ? '#1E1E1E' : '#FFFFFF';
-  const activeColor  = isDark ? '#A78BFA' : '#7C3AED';
+  const activeColor  = isDark ? '#7C3AED' : '#7C3AED';
   const inactiveColor = isDark ? '#6B7280' : '#9CA3AF';
 
   return (
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: 18,
-    marginTop: -12,
+    marginTop: -2,
   },
   centerBtnInner: {
     width: 52,

@@ -27,6 +27,10 @@ export default {
 
   tasks: {
     totalTasks: "Всего задач: {{count}}",
+    emptyState: {
+      title: "Задач пока нет",
+      subtitle: "Нажми + чтобы добавить первую",
+    },
     sort: {
       byName: "По имени",
       timeAsc: "Время ↑",

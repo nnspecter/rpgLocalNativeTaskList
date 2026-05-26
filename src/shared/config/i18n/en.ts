@@ -27,6 +27,10 @@ export default {
 
   tasks: {
     totalTasks: "Total tasks: {{count}}",
+    emptyState: {
+      title: "No tasks yet",
+      subtitle: "Tap + to add your first task",
+    },
     sort: {
       byName: "By name",
       timeAsc: "Time ↑",

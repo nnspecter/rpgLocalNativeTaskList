@@ -40,5 +40,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-around',
     gap: 10,
+    paddingBottom: 5
   },
 })

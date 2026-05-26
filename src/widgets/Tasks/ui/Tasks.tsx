@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from 'react'
 import { ScrollView, StyleSheet, useWindowDimensions, View, TouchableOpacity } from 'react-native'
 import OneTask from './Task/Task';
-import { Text, useTheme } from 'react-native-paper';
+import { Text, useTheme, Icon } from 'react-native-paper';
 import { useTasksStore } from '@/entities/tasks';
 import i18n from '@/shared/config/i18n';
 import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme';
@@ -66,18 +66,30 @@ export const Tasks = () => {
         ))}
       </View>
 
-      <ScrollView
-        style={[
-          styles.scrollContainer,
-          { maxHeight: height * 0.8, width: width * 0.9 }
-        ]}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {sortedTasks.map((task) => (
-          <OneTask data={task} key={`task-${task.taskId}`} />
-        ))}
-      </ScrollView>
+      {tasks.length === 0 ? (
+        <View style={styles.emptyState}>
+          <Icon source="clipboard-text-outline" size={64} color={theme.colors.onSurface} />
+          <Text variant="titleMedium" style={styles.emptyTitle}>
+            {i18n.t('tasks.emptyState.title')}
+          </Text>
+          <Text variant="bodyMedium" style={styles.emptySubtitle}>
+            {i18n.t('tasks.emptyState.subtitle')}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView
+          style={[
+            styles.scrollContainer,
+            { maxHeight: height * 0.8, width: width * 0.9 }
+          ]}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {sortedTasks.map((task) => (
+            <OneTask data={task} key={`task-${task.taskId}`} />
+          ))}
+        </ScrollView>
+      )}
     </View>
   );
 }
@@ -122,6 +134,22 @@ const makeStyles = (theme: AppTheme) => StyleSheet.create({
   sortButtonTextActive: {
     color: theme.colors.onPrimary,
     fontWeight: '600',
+  },
+  emptyState: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 12,
+    paddingVertical: 80,
+    opacity: 0.7,
+  },
+  emptyTitle: {
+    color: theme.colors.onSurface,
+    fontWeight: '600',
+  },
+  emptySubtitle: {
+    color: theme.colors.outline,
+    textAlign: 'center',
   },
   scrollContainer: {
     width: '100%',

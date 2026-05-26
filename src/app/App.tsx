@@ -10,8 +10,8 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as NavigationBar from 'expo-navigation-bar';
 import { DefaultTheme, DarkTheme, NavigationContainer } from '@react-navigation/native';
-import { TabNavigator } from './navigation/TabNavigator';
 import { Timer } from '@/widgets/Timer';
+import { TabNavigator } from "./navigation/TabNavigator";
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -31,16 +31,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    NavigationBar.setBackgroundColorAsync('transparent');
-    NavigationBar.setPositionAsync('absolute');
+    NavigationBar.setVisibilityAsync('hidden');
   }, []);
 
   return (
     <GestureHandlerRootView style={{ flex: 1, backgroundColor: bgColor }}>
       <SafeAreaProvider>
         <StatusBar
-          translucent
-          backgroundColor="transparent"
           style={isDark ? "light" : "dark"}
         />
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
