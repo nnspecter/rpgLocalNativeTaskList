@@ -88,6 +88,7 @@ export default {
     resume: "Resume",
     pause: "Pause",
     endEarly: "Cancel the task",
-    defaultSession: "Focus session"
+    defaultSession: "Focus session",
+    completeEarly: "Сomplete early"
   }
 };

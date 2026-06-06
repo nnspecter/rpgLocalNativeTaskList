@@ -90,7 +90,8 @@ export default {
     resume: "Продолжить",
     pause: "Пауза",
     endEarly: "Отменить выполнение",
-    defaultSession: "Фокус-сессия"
+    defaultSession: "Фокус-сессия",
+    completeEarly: "Завершить досрочно"
   }
 
 };

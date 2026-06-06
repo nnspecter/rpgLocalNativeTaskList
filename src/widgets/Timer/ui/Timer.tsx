@@ -6,69 +6,161 @@ import { useTimerStore } from '@/entities/timer'
 import { useSnacbarControlStore } from '@/shared/ui/Snackbar/model/snackbarControlStore'
 import i18n from '@/shared/config/i18n'
 import React, { useState, useEffect, useRef } from 'react'
-import { View, StyleSheet, Dimensions, StatusBar } from 'react-native'
+import { View, StyleSheet, Dimensions, StatusBar, AppState, AppStateStatus } from 'react-native'
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
 import { Button, IconButton, Surface, Text, useTheme } from 'react-native-paper'
 import { expValidation } from '@/features/expValidation/expValidation'
 import { checkAchievements } from '@/features/achievements/model/checkAchievements'
-import { refreshStreakWidget2x2, refreshStreakWidget5x2 } from '@/widgets/androidWidgets/lib/refresh'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-
+const TIMER_END_TIME_KEY = 'timer_end_time'
+const TIMER_PAUSED_REMAINING_KEY = 'timer_paused_remaining'
 
 const { width } = Dimensions.get('window')
 
 export const Timer = () => {
-  const { setIsTimer, selectedTask } = useTimerStore();
-  const { setVisible } = useSnacbarControlStore();
-  const {editTask} = useTasksStore();
-  const {setExperience} = useCharacterStore();
-  const {updateCompletedCount, updateStreak, updateTodayCompletedTasks} = useMetricsStore();
-  const theme = useTheme<AppTheme>();
+  const { isTimer, setIsTimer, selectedTask } = useTimerStore()
+  const { setVisible } = useSnacbarControlStore()
+  const { editTask } = useTasksStore()
+  const { setExperience } = useCharacterStore()
+  const { updateCompletedCount, updateStreak, updateTodayCompletedTasks } = useMetricsStore()
+  const theme = useTheme<AppTheme>()
   const taskMinutes = selectedTask?.minutes ?? 25
   const totalSeconds = taskMinutes * 60
 
   const [secondsLeft, setSecondsLeft] = useState<number>(totalSeconds)
   const [isPaused, setIsPaused] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+  const completedRef = useRef(false)
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState)
+  const endTimeRef = useRef<number | null>(null)
+  // Фиксируем реальное время старта — не зависит от замыканий
+  const startTimeRef = useRef<number>(Date.now())
+
+  const persistEndTime = async (endTime: number) => {
+    try {
+      await AsyncStorage.setItem(TIMER_END_TIME_KEY, String(endTime))
+    } catch (e) {
+      console.warn('Timer: failed to persist endTime', e)
+    }
+  }
+
+  const clearPersistedTimer = async () => {
+    try {
+      await AsyncStorage.multiRemove([TIMER_END_TIME_KEY, TIMER_PAUSED_REMAINING_KEY])
+    } catch (e) {
+      console.warn('Timer: failed to clear persisted timer', e)
+    }
+  }
 
   const handleTimerComplete = async () => {
-    if (selectedTask?.taskId == null) return;
+    if (completedRef.current) return
+    completedRef.current = true
 
-    editTask({ ...selectedTask, isComplete: true, taskId: selectedTask.taskId });
-    setExperience(expValidation(taskMinutes));
-    updateCompletedCount();
-    updateTodayCompletedTasks(taskMinutes);
-    updateStreak();
-
-    checkAchievements();
-  
-    const { streak, todayUpdate } = useMetricsStore.getState();
-    const { level } = useCharacterStore.getState();
-    await refreshStreakWidget5x2(streak, todayUpdate, level);
-    await refreshStreakWidget2x2(streak, todayUpdate, level);
-
-    setIsTimer(false);
-    setVisible(true);
-  };
-
-  useEffect(() => {
-    if (!isPaused && secondsLeft > 0) {
-      intervalRef.current = setInterval(() => {
-        setSecondsLeft((prev: number) => {
-          if (prev <= 1) {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            handleTimerComplete(); // просто вызываем
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current)
+      intervalRef.current = null
     }
 
+    await clearPersistedTimer()
+    if (selectedTask?.taskId == null) return
+    const workedMs = Date.now() - startTimeRef.current
+    const workedMinutes = Math.min(taskMinutes, workedMs / 60000)
+    editTask({ ...selectedTask, isComplete: true, taskId: selectedTask.taskId })
+    setExperience(expValidation(workedMinutes))
+    updateCompletedCount()
+    updateTodayCompletedTasks(workedMinutes)
+    updateStreak()
+    checkAchievements()
+    setIsTimer(false)
+    setVisible(true)
+  }
+
+  const startInterval = (endTime: number) => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    intervalRef.current = setInterval(() => {
+      const remaining = Math.round((endTime - Date.now()) / 1000)
+      if (remaining <= 0) {
+        setSecondsLeft(0)
+        handleTimerComplete()
+        return
+      }
+      setSecondsLeft(remaining)
+    }, 1000)
+  }
+
+  useEffect(() => {
+    completedRef.current = false
+    setSecondsLeft(totalSeconds)
+    setIsPaused(false)
+    startTimeRef.current = Date.now()
+    const endTime = Date.now() + totalSeconds * 1000
+    endTimeRef.current = endTime
+    persistEndTime(endTime)
+    startInterval(endTime)
+
     return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
-  }, [isPaused]);
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [totalSeconds])
+
+  // при возврате из фона пересчитываем время
+  useEffect(() => {
+    const handleAppStateChange = async (nextState: AppStateStatus) => {
+      const prevState = appStateRef.current
+      appStateRef.current = nextState
+
+      if (
+        (prevState === 'background' || prevState === 'inactive') &&
+        nextState === 'active'
+      ) {
+        if (isPaused) return
+        try {
+          const stored = await AsyncStorage.getItem(TIMER_END_TIME_KEY)
+          if (!stored) return
+          const endTime = Number(stored)
+          const remaining = Math.round((endTime - Date.now()) / 1000)
+          if (remaining <= 0) {
+            setSecondsLeft(0)
+            handleTimerComplete()
+            return
+          }
+          setSecondsLeft(remaining)
+          endTimeRef.current = endTime
+          startInterval(endTime)
+        } catch (e) {
+          console.warn('Timer: failed to restore endTime', e)
+        }
+      }
+
+      if (nextState === 'background' || nextState === 'inactive') {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current)
+          intervalRef.current = null
+        }
+      }
+    }
+    const subscription = AppState.addEventListener('change', handleAppStateChange)
+    return () => subscription.remove()
+  }, [isPaused])
+
+  const handlePause = async () => {
+    if (isPaused) {
+      const endTime = Date.now() + secondsLeft * 1000
+      endTimeRef.current = endTime
+      await persistEndTime(endTime)
+      await AsyncStorage.removeItem(TIMER_PAUSED_REMAINING_KEY)
+      setIsPaused(false)
+      startInterval(endTime)
+    } else {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      intervalRef.current = null
+      await AsyncStorage.setItem(TIMER_PAUSED_REMAINING_KEY, String(secondsLeft))
+      await AsyncStorage.removeItem(TIMER_END_TIME_KEY)
+      endTimeRef.current = null
+      setIsPaused(true)
+    }
+  }
 
   const fill = Math.round(((totalSeconds - secondsLeft) / totalSeconds) * 100)
 
@@ -76,24 +168,14 @@ export const Timer = () => {
   const displayMinutes = Math.floor((secondsLeft % 3600) / 60)
   const displaySeconds = secondsLeft % 60
 
-  const timeString = displayHours > 0
-    ? `${String(displayHours)}:${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
-    : `${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
+  const timeString =
+    displayHours > 0
+      ? `${String(displayHours)}:${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
+      : `${String(displayMinutes).padStart(2, '0')}:${String(displaySeconds).padStart(2, '0')}`
 
-  const timeUnit = isPaused
-    ? i18n.t('timer.paused')
-    : i18n.t('timer.remaining')
+  const timeUnit = isPaused ? i18n.t('timer.paused') : i18n.t('timer.remaining')
 
-  const handlePause = () => {
-    if (isPaused) {
-      setIsPaused(false)
-    } else {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-      setIsPaused(true)
-    }
-  }
-
-  const styles = makeStyles(theme, displayHours > 0);
+  const styles = makeStyles(theme, displayHours > 0)
 
   return (
     <View style={styles.container}>
@@ -143,7 +225,22 @@ export const Timer = () => {
 
       <Button
         mode="outlined"
-        onPress={() => setIsTimer(false)}
+        onPress={() => handleTimerComplete()}
+        style={styles.endEarlyButton}
+        contentStyle={styles.endButtonContent}
+        labelStyle={styles.endButtonLabel}
+        textColor={theme.colors.primary}
+        rippleColor={theme.colors.primary}
+      >
+        {i18n.t('timer.completeEarly')}
+      </Button>
+
+      <Button
+        mode="outlined"
+        onPress={async () => {
+          await clearPersistedTimer()
+          setIsTimer(false)
+        }}
         style={styles.endButton}
         contentStyle={styles.endButtonContent}
         labelStyle={styles.endButtonLabel}
@@ -156,71 +253,78 @@ export const Timer = () => {
   )
 }
 
-const makeStyles = (theme: AppTheme, hasHours: boolean) => StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-    paddingHorizontal: 24,
-    paddingVertical: 40,
-  },
-  taskName: {
-    color: theme.colors.primary,
-    fontSize: 20,
-    fontWeight: '500',
-    textAlign: 'center',
-    letterSpacing: 0.3,
-    maxWidth: width * 0.8,
-  },
-  circleWrapper: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  innerCircle: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  timeText: {
-    color: theme.colors.onBackground,
-    fontSize: hasHours ? 42 : 56,
-    fontWeight: '300',
-    letterSpacing: hasHours ? 2 : 4,
-    fontVariant: ['tabular-nums'],
-  },
-  labelText: {
-    color: theme.colors.primary,
-    fontSize: 14,
-    letterSpacing: 1.5,
-    textTransform: 'uppercase',
-    marginTop: 4,
-  },
-  buttonRow: {
-    backgroundColor: 'transparent',
-    alignItems: 'center',
-  },
-  pauseIcon: {
-    borderRadius: 50,
-    width: 68,
-    height: 68,
-  },
-  pauseLabel: {
-    color: theme.colors.primary,
-    fontSize: 13,
-    marginTop: 8,
-    letterSpacing: 0.5,
-  },
-  endButton: {
-    borderColor: theme.colors.error,
-    borderWidth: 1,
-    borderRadius: 8,
-    width: width * 0.7,
-  },
-  endButtonContent: {
-    paddingVertical: 6,
-  },
-  endButtonLabel: {
-    fontSize: 14,
-    letterSpacing: 0.5,
-  },
-});
+const makeStyles = (theme: AppTheme, hasHours: boolean) =>
+  StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background,
+      alignItems: 'center',
+      justifyContent: 'space-evenly',
+      paddingHorizontal: 24,
+      paddingVertical: 40,
+    },
+    taskName: {
+      color: theme.colors.primary,
+      fontSize: 20,
+      fontWeight: '500',
+      textAlign: 'center',
+      letterSpacing: 0.3,
+      maxWidth: width * 0.8,
+    },
+    circleWrapper: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    innerCircle: {
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    timeText: {
+      color: theme.colors.onBackground,
+      fontSize: hasHours ? 42 : 56,
+      fontWeight: '300',
+      letterSpacing: hasHours ? 2 : 4,
+      fontVariant: ['tabular-nums'],
+    },
+    labelText: {
+      color: theme.colors.primary,
+      fontSize: 14,
+      letterSpacing: 1.5,
+      textTransform: 'uppercase',
+      marginTop: 4,
+    },
+    buttonRow: {
+      backgroundColor: 'transparent',
+      alignItems: 'center',
+    },
+    pauseIcon: {
+      borderRadius: 50,
+      width: 68,
+      height: 68,
+    },
+    pauseLabel: {
+      color: theme.colors.primary,
+      fontSize: 13,
+      marginTop: 8,
+      letterSpacing: 0.5,
+    },
+    endEarlyButton: {
+      borderColor: theme.colors.primaryContainer,
+      borderWidth: 1,
+      borderRadius: 8,
+      width: width * 0.7,
+    },
+    endButton: {
+      borderColor: theme.colors.error,
+      borderWidth: 1,
+      borderRadius: 8,
+      width: width * 0.7,
+    },
+    endButtonContent: {
+      paddingVertical: 6,
+    },
+    endButtonLabel: {
+      fontSize: 14,
+      letterSpacing: 0.5,
+    },
+  })
