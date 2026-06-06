@@ -15,13 +15,12 @@ export default function Main(){
         <View style={{
           gap: 10,
           paddingTop: insets.top +2,
-          paddingBottom: 10,
           alignContent: "center",
           alignSelf: "center",
         }}>
           <Character/>
-          <Tasks/>
           <Metrics/>
+          <Tasks/>
           <AfterCompleteSnackbar/>
           <NewTaskDialog />
         </View>

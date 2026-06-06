@@ -5,16 +5,24 @@ import i18n from '@/shared/config/i18n'
 import React, { useEffect, useRef } from 'react'
 import { View, StyleSheet, Animated } from 'react-native'
 import { Text, useTheme } from 'react-native-paper'
+import Svg, { Circle } from 'react-native-svg'
+
+const RADIUS = 73
+const STROKE_WIDTH = 10
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS
+const SIZE = 174
+
+const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
 export const Character = () => {
     const theme = useTheme<AppTheme>()
     const { characterName, experience, maxExperience, level } = useCharacterStore()
     const achievements = useAchievementsStore((state) => state.achievements)
     const totalBoost = achievements
-      .filter((a) => a.isActive)
-      .reduce((sum, a) => sum + a.boost, 0)
+        .filter((a) => a.isActive)
+        .reduce((sum, a) => sum + a.boost, 0)
 
-    const xpPercent = (experience / maxExperience) * 100
+    const xpPercent = experience / maxExperience
 
     const xpAnim = useRef(new Animated.Value(0)).current
     const fadeAnim = useRef(new Animated.Value(0)).current
@@ -23,7 +31,7 @@ export const Character = () => {
         Animated.parallel([
             Animated.timing(fadeAnim, {
                 toValue: 1,
-                duration: 300,
+                duration: 400,
                 useNativeDriver: true,
             }),
             Animated.spring(xpAnim, {
@@ -35,46 +43,62 @@ export const Character = () => {
         ]).start()
     }, [xpPercent])
 
-    const xpBarWidth = xpAnim.interpolate({
-        inputRange: [0, 100],
-        outputRange: ['0%', '100%'],
+    const strokeDashoffset = xpAnim.interpolate({
+        inputRange: [0, 1],
+        outputRange: [CIRCUMFERENCE, 0],
     })
 
     const styles = makeStyles(theme)
+    const center = SIZE / 2
 
     return (
         <Animated.View style={[styles.card, { opacity: fadeAnim }]}>
-            {/* Строка: имя + уровень + XP */}
-            <View style={styles.headerRow}>
-                <Text style={styles.name} numberOfLines={1}>
-                    {characterName}
-                </Text>
-                <View style={styles.levelChip}>
-                    <Text style={styles.levelChipText}>
-                        {i18n.t('character.level', { lvl: level })}
+            <View style={styles.svgWrapper}>
+                <Svg width={SIZE} height={SIZE}>
+                    <Circle
+                        cx={center}
+                        cy={center}
+                        r={RADIUS}
+                        stroke={theme.colors.avatarBackground}
+                        strokeWidth={STROKE_WIDTH}
+                        fill="none"
+                    />
+                    <AnimatedCircle
+                        cx={center}
+                        cy={center}
+                        r={RADIUS}
+                        stroke={theme.colors.primary}
+                        strokeWidth={STROKE_WIDTH}
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeDasharray={CIRCUMFERENCE}
+                        strokeDashoffset={strokeDashoffset}
+                        rotation="-90"
+                        origin={`${center}, ${center}`}
+                    />
+                </Svg>
+
+                <View style={styles.centerContent}>
+                    <Text style={styles.name} numberOfLines={1}>
+                        {characterName}
                     </Text>
+                    <View style={styles.levelChip}>
+                        <Text style={styles.levelChipText}>
+                            {i18n.t('character.level', { lvl: level })}
+                        </Text>
+                    </View>
+                    {totalBoost > 0 && (
+                        <Text style={styles.boostText}>+{totalBoost}% XP</Text>
+                    )}
                 </View>
-                <Text style={styles.xpValue}>
-                    {experience}
-                    <Text style={styles.xpMax}>/{maxExperience} XP</Text>
-                </Text>
             </View>
 
-            {/* Прогресс-бар */}
-            <View style={styles.track}>
-                <Animated.View style={[styles.fill, { width: xpBarWidth }]} />
-            </View>
-
-            {/* Подпись */}
             <Text style={styles.xpSub}>
-                {i18n.t('character.xpToNext', { xp: maxExperience - experience, lvl: level + 1 })}
+                {i18n.t('character.xpToNext', {
+                    xp: maxExperience - experience,
+                    lvl: level + 1,
+                })}
             </Text>
-
-            {totalBoost > 0 && (
-              <Text style={styles.boostText}>
-                +{totalBoost}% XP boost
-              </Text>
-            )}
         </Animated.View>
     )
 }
@@ -83,72 +107,56 @@ const makeStyles = (theme: AppTheme) =>
     StyleSheet.create({
         card: {
             backgroundColor: theme.colors.card,
-            borderRadius: 12,
-            marginHorizontal: 0,
+            borderRadius: 16,
+            alignItems: 'center',
+            paddingVertical: 12,
+            paddingHorizontal: 16,
             marginVertical: 6,
-            paddingHorizontal: 14,
-            paddingVertical: 10,
             elevation: 2,
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 1 },
             shadowOpacity: 0.12,
-            shadowRadius: 2,
+            shadowRadius: 4,
             gap: 8,
         },
-        headerRow: {
-            flexDirection: 'row',
+        svgWrapper: {
+            width: SIZE,
+            height: SIZE,
             alignItems: 'center',
-            gap: 8,
+            justifyContent: 'center',
+        },
+        centerContent: {
+            position: 'absolute',
+            alignItems: 'center',
+            gap: 6,
         },
         name: {
-            flex: 1,
             fontSize: 14,
-            fontWeight: '600',
+            fontWeight: '700',
             color: theme.colors.onSurface,
             letterSpacing: 0.15,
         },
         levelChip: {
             backgroundColor: theme.colors.avatarBackground,
             borderRadius: 6,
-            paddingHorizontal: 8,
-            paddingVertical: 2,
+            paddingHorizontal: 10,
+            paddingVertical: 3,
         },
         levelChipText: {
             fontSize: 11,
-            fontWeight: '500',
+            fontWeight: '600',
             color: theme.colors.primary,
             letterSpacing: 0.4,
         },
-        xpValue: {
-            fontSize: 14,
-            fontWeight: '700',
-            color: theme.colors.onSurface,
-        },
-        xpMax: {
-            fontSize: 11,
-            fontWeight: '400',
-            color: theme.colors.onSurface,
-        },
-        track: {
-            height: 6,
-            backgroundColor: theme.colors.avatarBackground,
-            borderRadius: 3,
-            overflow: 'hidden',
-        },
-        fill: {
-            height: '100%',
-            backgroundColor: theme.colors.primary,
-            borderRadius: 3,
-        },
-        xpSub: {
-            fontSize: 11,
-            color: theme.colors.onSurface,
-            letterSpacing: 0.3,
-        },
         boostText: {
-            fontSize: 11,
+            fontSize: 10,
             fontWeight: '600',
             color: theme.colors.primary,
-            letterSpacing: 0.3,
+        },
+        xpSub: {
+            fontSize: 13,
+            fontWeight: '700',
+            color: theme.colors.onSurface,
+            letterSpacing: 0.2,
         },
     })
