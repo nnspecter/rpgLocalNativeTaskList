@@ -19,10 +19,6 @@ export default function NewTaskDialog() {
     time: 0,
   });
 
-  useEffect(() => {
-    console.log(newTask.time)
-  }, [newTask])
-
   const hideDialog = () => {
     close();
     setNewTask({ taskName: "", description: "", time: 0 });
@@ -50,7 +46,7 @@ export default function NewTaskDialog() {
               label={i18n.t('taskDialog.fields.taskName')}
               mode="outlined"
               value={newTask.taskName}
-              onChangeText={name => setNewTask(prev => ({ ...prev, taskName: name }))}
+              onChangeText={name => setNewTask({ ...newTask, taskName: name })}
               style={styles.input}
               outlineStyle={styles.inputOutline}
               activeOutlineColor={theme.colors.primary}
@@ -62,7 +58,7 @@ export default function NewTaskDialog() {
               multiline
               numberOfLines={3}
               value={newTask.description}
-              onChangeText={desc => setNewTask(prev => ({ ...prev, description: desc }))}
+              onChangeText={desc => setNewTask({ ...newTask, description: desc })}
               style={[styles.input, styles.textArea]}
               outlineStyle={styles.inputOutline}
               activeOutlineColor={theme.colors.primary}
