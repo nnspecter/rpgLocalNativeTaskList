@@ -7,15 +7,21 @@ import { Achievement, allAchievements } from "./allAchievements";
 
 interface AchievementsStore {
   achievements: Achievement[],
-  setActive: (id: number) => void
+  totalBoost: number,
+  setActive: (id: number) => void,
   setOpen: (id: number) => void
-  
 }
 
 export const useAchievementsStore = create<AchievementsStore>()(
   persist(
     (set) => ({
       achievements: allAchievements,
+      
+      //высчитываем при первом обращении 
+      totalBoost: allAchievements
+        .filter((a) => a.isActive)
+        .reduce((sum, a) => sum + a.boost, 0),
+
       //Изменить активное состояние
       setActive: (id: number) => {
         set((state) => {
@@ -27,16 +33,20 @@ export const useAchievementsStore = create<AchievementsStore>()(
             const activeCount = state.achievements.filter((a) => a.isActive).length;
             if (activeCount >= 2) return {};
           }
-
-          return {
-            achievements: state.achievements.map((achievement) =>
+          const achievements = state.achievements.map((achievement) =>
               achievement.id === id
                 ? { ...achievement, isActive: !achievement.isActive }
                 : achievement
-            ),
+            );
+          const activeAchievements = achievements.filter((el) => el.isActive)
+          const totalBoost = activeAchievements.reduce((sum, achievement) => sum + achievement.boost, 0);
+          return {
+            achievements,
+            totalBoost
           };
         });
       },
+
       //Открытие ачивки
       setOpen: (id: number) => {
         (set)((state) => ({
@@ -52,6 +62,7 @@ export const useAchievementsStore = create<AchievementsStore>()(
       },
 
     }),
+
     {
       name: "achievements-storage",
       storage: createJSONStorage(() => AsyncStorage),

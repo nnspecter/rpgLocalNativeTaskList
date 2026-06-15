@@ -15,18 +15,17 @@ const SIZE = 174
 const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 
 export const Character = () => {
-    const theme = useTheme<AppTheme>()
-    const { characterName, experience, maxExperience, level } = useCharacterStore()
-    const achievements = useAchievementsStore((state) => state.achievements)
-    const totalBoost = achievements
-        .filter((a) => a.isActive)
-        .reduce((sum, a) => sum + a.boost, 0)
-
+    const theme = useTheme<AppTheme>();
+    const { characterName, experience, maxExperience, level } = useCharacterStore();
+    const totalBoost = useAchievementsStore((s) => s.totalBoost)
+    
+    //Сам прогресс, для позиции прогресса в круге
     const xpPercent = experience / maxExperience
 
     const xpAnim = useRef(new Animated.Value(0)).current
     const fadeAnim = useRef(new Animated.Value(0)).current
-
+    
+    //анимация при изменении прогресса
     useEffect(() => {
         Animated.parallel([
             Animated.timing(fadeAnim, {

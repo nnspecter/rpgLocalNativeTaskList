@@ -12,6 +12,7 @@ import { Button, IconButton, Surface, Text, useTheme } from 'react-native-paper'
 import { expValidation } from '@/features/expValidation/expValidation'
 import { checkAchievements } from '@/features/achievements/model/checkAchievements'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useAchievementsStore } from '@/entities/Achievements'
 
 const TIMER_END_TIME_KEY = 'timer_end_time'
 const TIMER_PAUSED_REMAINING_KEY = 'timer_paused_remaining'
@@ -19,11 +20,13 @@ const TIMER_PAUSED_REMAINING_KEY = 'timer_paused_remaining'
 const { width } = Dimensions.get('window')
 
 export const Timer = () => {
-  const { isTimer, setIsTimer, selectedTask } = useTimerStore()
-  const { setVisible } = useSnacbarControlStore()
-  const { editTask } = useTasksStore()
-  const { setExperience } = useCharacterStore()
-  const { updateCompletedCount, updateStreak, updateTodayCompletedTasks } = useMetricsStore()
+  const { isTimer, setIsTimer, selectedTask } = useTimerStore();
+  const { setVisible } = useSnacbarControlStore();
+  const { editTask } = useTasksStore();
+  const { setExperience } = useCharacterStore();
+  const { updateCompletedCount, updateStreak, updateTodayCompletedTasks } = useMetricsStore();
+  const { totalBoost} = useAchievementsStore();
+
   const theme = useTheme<AppTheme>()
   const taskMinutes = selectedTask?.minutes ?? 25
   const totalSeconds = taskMinutes * 60
@@ -67,7 +70,7 @@ export const Timer = () => {
     const workedMs = Date.now() - startTimeRef.current
     const workedMinutes = Math.min(taskMinutes, workedMs / 60000)
     editTask({ ...selectedTask, isComplete: true, taskId: selectedTask.taskId })
-    setExperience(expValidation(workedMinutes))
+    setExperience(expValidation(workedMinutes, totalBoost))
     updateCompletedCount()
     updateTodayCompletedTasks(workedMinutes)
     updateStreak()

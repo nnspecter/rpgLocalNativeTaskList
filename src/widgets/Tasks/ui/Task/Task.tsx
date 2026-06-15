@@ -12,9 +12,11 @@ import { useTimerStore } from '@/entities/timer';
 import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme';
 import { formatMinutes } from '@/shared/config/TimeFormatters/formatMinutes';
 import { expValidation } from '@/features/expValidation/expValidation';
+import { useAchievementsStore } from '@/entities/Achievements';
 
 export default function OneTask({ data }: { data: Task }) {
   const { setSelectedTask, setIsTimer } = useTimerStore();
+  const totalBoost = useAchievementsStore((s) => s.totalBoost);
   const swipeableRef = useRef<any>(null);
   const theme = useTheme<AppTheme>();
   const styles = makeStyles(theme);
@@ -64,7 +66,7 @@ export default function OneTask({ data }: { data: Task }) {
             {data.time ? (
               <View style={styles.timeBadge}>
                 <Text style={styles.timeText}>
-                  {expValidation(data.time)}xp
+                  {expValidation(data.time, totalBoost)}xp
                 </Text>
               </View>
             ) : null}
