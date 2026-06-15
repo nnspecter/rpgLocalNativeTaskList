@@ -1,8 +1,8 @@
 import { AfterCompleteSnackbar } from '@/shared/ui/Snackbar';
 import { Character } from '@/widgets/Character';
 import { Metrics } from '@/widgets/Metrics';
-import { Tasks } from '@/widgets/Tasks';
-import NewTaskDialog from '@/widgets/Tasks/ui/NewTask/NewTaskDialog';
+import { BottomSheets, ChangeTaskBottomSheet, NewTaskBottomSheet, Tasks } from '@/widgets/Tasks';
+
 import React from 'react'
 import { View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -22,7 +22,7 @@ export default function Main(){
           <Metrics/>
           <Tasks/>
           <AfterCompleteSnackbar/>
-          <NewTaskDialog />
+          <BottomSheets/>
         </View>
     </View>
   )

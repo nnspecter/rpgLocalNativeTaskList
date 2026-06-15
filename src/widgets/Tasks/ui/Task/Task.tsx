@@ -1,8 +1,7 @@
 // OneTask.tsx
 import React, { useRef } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Text, useTheme } from 'react-native-paper';
-import ChangeTaskDialog from '../ChangeTaskDialog/ChangeTaskDialog';
+import { Button, IconButton, Text, useTheme } from 'react-native-paper';
 import DeleteTaskDialog from '../DeleteTaskDialog/DeleteTaskDialog';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import Reanimated, { SharedValue, useAnimatedStyle } from 'react-native-reanimated';
@@ -13,9 +12,11 @@ import { AppTheme } from '@/app/providers/ThemeProvider/lib/paperTheme';
 import { formatMinutes } from '@/shared/config/TimeFormatters/formatMinutes';
 import { expValidation } from '@/features/expValidation/expValidation';
 import { useAchievementsStore } from '@/entities/Achievements';
+import { useTaskBottomSheetsStore } from '../../model/TaskBottomSheetsControl/TaskBottomSheetsStore';
 
 export default function OneTask({ data }: { data: Task }) {
   const { setSelectedTask, setIsTimer } = useTimerStore();
+  const openChangeTaskDialog = useTaskBottomSheetsStore((s) => s.openChangeTaskBottomSheet)
   const totalBoost = useAchievementsStore((s) => s.totalBoost);
   const swipeableRef = useRef<any>(null);
   const theme = useTheme<AppTheme>();
@@ -33,7 +34,14 @@ export default function OneTask({ data }: { data: Task }) {
         })),
       ]}
     >
-      <ChangeTaskDialog task={data} />
+      <IconButton
+        mode="contained"
+        onPress={() => openChangeTaskDialog(data)}
+        icon="pencil"
+        iconColor={theme.colors.onPrimary}
+        containerColor={theme.colors.primary}
+        style={styles.editBtn}
+      />
       <DeleteTaskDialog task={data} />
     </Reanimated.View>
   );
@@ -101,6 +109,9 @@ export default function OneTask({ data }: { data: Task }) {
 
 const makeStyles = (theme: AppTheme) =>
   StyleSheet.create({
+    editBtn: {
+      borderRadius: 10,
+    },
     swipeableContainer: {
       width: '100%',
       padding: 2,

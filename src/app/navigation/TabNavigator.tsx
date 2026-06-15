@@ -3,10 +3,10 @@ import { useColorScheme, View, Pressable, StyleSheet, Animated } from 'react-nat
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { MaterialTopTabBarProps } from '@react-navigation/material-top-tabs';
-import { useTaskDialogStore } from '@/shared/ui/TaskDialogControl';
 import { useRef } from 'react';
 import Main from '@/pages/Main/Main';
 import AchievementsPage from '@/pages/Achievements/Achievements';
+import { useTaskBottomSheetsStore } from '@/widgets/Tasks';
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -19,7 +19,7 @@ const TABS = [
 function BottomBar({ state, navigation }: MaterialTopTabBarProps) {
   const isDark = useColorScheme() === 'dark';
   const insets = useSafeAreaInsets();
-  const openTaskDialog = useTaskDialogStore((s) => s.open);
+  const openTaskDialog = useTaskBottomSheetsStore((s) => s.openNewTaskBottomSheet);
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
   const animateIn = () => {

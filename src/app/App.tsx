@@ -12,6 +12,8 @@ import * as NavigationBar from 'expo-navigation-bar';
 import { DefaultTheme, DarkTheme, NavigationContainer } from '@react-navigation/native';
 import { Timer } from '@/widgets/Timer';
 import { TabNavigator } from "./navigation/TabNavigator";
+import { BottomSheets, ChangeTaskBottomSheet, NewTaskBottomSheet } from "@/widgets/Tasks";
+
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -43,6 +45,7 @@ export default function App() {
         <PaperProvider theme={isDark ? darkTheme : lightTheme}>
           <NavigationContainer theme={navTheme}>
             <TabNavigator />
+            
             {isTimer && (
               <View style={[styles.timerOverlay, { backgroundColor: bgColor }]}>
                 <Timer />
