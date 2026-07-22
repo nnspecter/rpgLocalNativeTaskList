@@ -45,7 +45,7 @@
 ### Установка
 https://play.google.com/apps/testing/com.nnspecter.rpgtasks
    ```bash
-   git clone [https://github.com/nnspecter/rpgLocalNativeTaskList.git](https://github.com/nnspecter/rpgLocalNativeTaskList.git)
+   git clone https://github.com/nnspecter/rpgLocalNativeTaskList
    cd rpgLocalNativeTaskList
    npm i
    npm run start
