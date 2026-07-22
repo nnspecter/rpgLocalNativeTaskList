@@ -44,7 +44,6 @@
 
 ### Установка
 https://play.google.com/apps/testing/com.nnspecter.rpgtasks
-1. Клонируй репозиторий:
    ```bash
    git clone [https://github.com/nnspecter/rpgLocalNativeTaskList.git](https://github.com/nnspecter/rpgLocalNativeTaskList.git)
    cd rpgLocalNativeTaskList
