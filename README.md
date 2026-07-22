@@ -33,6 +33,7 @@
 * **Language:** TypeScript
 * **UI & Animations:** React Native Reanimated
 * **Локализация:** i18n
+* **Архитектура:** FSD
 
 ---
 
